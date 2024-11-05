@@ -2,7 +2,7 @@
 // File name: ParamOperation.cs
 // Code It Yourself with .NET, 2024
 
-// This class is derived from content originally published in the book Deep Learning from Scratch: Building with
+// This class is derived from the content originally published in the book Deep Learning from Scratch: Building with
 // Python from First Principles by Seth Weidman. Some comments here are copied/modified from the original text.
 
 using MachineLearning.NeuralNetwork.Exceptions;
@@ -19,13 +19,15 @@ public abstract class ParamOperation(Matrix param) : Operation
 {
     private Matrix? _paramGradient;
 
-    public Matrix Param => param;
+    protected Matrix Param => param;
 
-    public Matrix ParamGradient => _paramGradient ?? throw new NotYetCalculatedException();
+    internal Matrix ParamGradient => _paramGradient ?? throw new NotYetCalculatedException();
 
     public override Matrix Backward(Matrix outputGradient)
     {
+        // Liczymy inputGradient, aby móc go przekazać do warstwy/operacji wyżej
         Matrix inputGrad = base.Backward(outputGradient);
+        // Liczymy paramGradient, aby móc go przekazać do optymalizatora
         _paramGradient = CalcParamGradient(outputGradient);
         EnsureSameShape(param, _paramGradient);
 

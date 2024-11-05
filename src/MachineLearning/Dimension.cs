@@ -4,7 +4,7 @@
 
 namespace MachineLearning;
 
-public enum Dimension
+public enum Dimension: int
 {
     Rows = 0,
     Columns = 1

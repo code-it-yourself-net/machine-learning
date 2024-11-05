@@ -10,13 +10,15 @@ public class StochasticGradientDescent(LearningRate learningRate) : Optimizer(le
 {
     public override void Step(NeuralNetwork neuralNetwork)
     {
-        Matrix[] @params = neuralNetwork.GetParams();
-        Matrix[] paramGrads = neuralNetwork.GetParamGradients();
+        Matrix[] @params = neuralNetwork.GetAllParams();
+        Matrix[] paramGrads = neuralNetwork.GetAllParamGradients();
 
+#if DEBUG
         if (@params.Length != paramGrads.Length)
         {
             throw new ArgumentException("Number of parameters and gradients do not match.");
         }
+#endif
 
         // Iterate through both lists in parallel
         for (int i = 0; i < @params.Length; i++)

@@ -42,11 +42,12 @@ public class Trainer(
     public static IEnumerable<(Matrix xBatch, Matrix yBatch)> GenerateBatches(Matrix x, Matrix y, int batchSize = 32)
     {
         int trainRows = x.GetDimension(Dimension.Rows);
+#if DEBUG
         if (trainRows != y.GetDimension(Dimension.Rows))
         {
             throw new ArgumentException("Number of samples in x and y do not match.");
         }
-
+#endif
         for (int batchStart = 0; batchStart < trainRows; batchStart += batchSize)
         {
             int effectiveBatchSize = Math.Min(batchSize, trainRows - batchStart);
@@ -72,6 +73,7 @@ public class Trainer(
         int epochs = 100,
         int evalEveryEpochs = 10,
         int batchSize = 32,
+        bool earlyStop = false,
         bool restart = true)
     {
         Stopwatch trainWatch = Stopwatch.StartNew();
@@ -87,6 +89,13 @@ public class Trainer(
         if (Memo is not null)
             logger?.LogInformation("Memo: \"{memo}\".", Memo);
 
+#if DEBUG
+        string environment = "Debug";
+#else
+        string environment = "Release";
+#endif
+        logger?.LogInformation("Environment: {environment}.", environment);
+
         (Matrix xTrain, Matrix yTrain, Matrix? xTest, Matrix? yTest) = dataSource.GetData();
 
         for (int epoch = 1; epoch <= epochs; epoch++)
@@ -100,11 +109,11 @@ public class Trainer(
                 WriteLine($"Epoch {epoch}/{epochs}...");
 
             // Epoch should be later than 1 to save the first checkpoint.
-            if (eval && epoch > 1)
-            {
-                neuralNetwork.SaveCheckpoint();
-                logger?.LogInformation("Checkpoint saved.");
-            }
+            //if (eval && epoch > 1)
+            //{
+            //    neuralNetwork.SaveCheckpoint();
+            //    logger?.LogInformation("Checkpoint saved.");
+            //}
 
             (xTrain, yTrain) = PermuteData(xTrain, yTrain, random ?? new Random());
             optimizer.UpdateLearningRate(epoch, epochs);
@@ -163,7 +172,7 @@ public class Trainer(
                 {
                     _bestLoss = loss;
                 }
-                else
+                else if (earlyStop)
                 {
                     if (neuralNetwork.HasCheckpoint())
                     {

@@ -2,7 +2,7 @@
 // File name: Layer.cs
 // Code It Yourself with .NET, 2024
 
-// This class is derived from content originally published in the book Deep Learning from Scratch: Building with
+// This class is derived from the content originally published in the book Deep Learning from Scratch: Building with
 // Python from First Principles by Seth Weidman. Some comments here are copied/modified from the original text.
 
 using MachineLearning.NeuralNetwork.Exceptions;
@@ -15,13 +15,8 @@ namespace MachineLearning.NeuralNetwork.Layers;
 /// <summary>
 /// A "layer" of neurons in a neural network.
 /// </summary>
-public abstract class Layer(int neurons)
+public abstract class Layer()
 {
-    /// <summary>
-    /// The number of "neurons" roughly corresponds to the "breadth" of the layer.
-    /// </summary>
-    private readonly int _neurons = neurons;
-
     private bool _first = true;
 
     /// <summary>
@@ -37,13 +32,11 @@ public abstract class Layer(int neurons)
     /// <summary>
     /// The parameters (weights & biases) of the layer.
     /// </summary>
-    public List<Matrix> Params { get; private set; } = [];
+    internal List<Matrix> Params { get; private set; } = [];
 
     protected List<Operation> Operations { get; private set; } = [];
 
     internal List<Matrix> ParamGradients => _paramGradients ?? throw new NotYetCalculatedException();
-
-    protected int Neurons => _neurons;
 
     protected abstract void SetupLayer(Matrix input);
 

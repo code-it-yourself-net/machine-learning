@@ -264,6 +264,8 @@ public class MatrixOldTests
         Assert.AreEqual(6f, transposed.Array.GetValue(1, 2));
     }
 
+    // Comparing results from MatrixOld and Matrix
+
     [TestMethod]
     public void StdsAreEqual()
     {

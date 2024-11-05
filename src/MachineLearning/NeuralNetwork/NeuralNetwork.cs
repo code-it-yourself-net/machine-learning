@@ -56,9 +56,10 @@ public class NeuralNetwork(List<Layer> layers, Loss lossFunction)
         return _lastLoss;
     }
 
-    public Matrix[] GetParams() => _layers.SelectMany(layer => layer.Params).ToArray();
+    public Matrix[] GetAllParams() => _layers.SelectMany(layer => layer.Params).ToArray();
 
-    public Matrix[] GetParamGradients() => _layers.SelectMany(layer => layer.ParamGradients).ToArray();
+    internal Matrix[] GetAllParamGradients() => _layers.SelectMany(layer => layer.ParamGradients).ToArray();
+
 
     private NeuralNetwork? _checkpoint;
 

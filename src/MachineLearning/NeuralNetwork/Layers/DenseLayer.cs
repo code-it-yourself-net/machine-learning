@@ -2,7 +2,7 @@
 // File name: Dense.cs
 // Code It Yourself with .NET, 2024
 
-// This class is derived from content originally published in the book Deep Learning from Scratch: Building with
+// This class is derived from the content originally published in the book Deep Learning from Scratch: Building with
 // Python from First Principles by Seth Weidman. Some comments here are copied/modified from the original text.
 
 using MachineLearning.NeuralNetwork.Operations;
@@ -10,8 +10,13 @@ using MachineLearning.NeuralNetwork.ParamInitializers;
 
 namespace MachineLearning.NeuralNetwork.Layers;
 
-public class DenseLayer(int neurons, Operation activation, ParamInitializer paramInitializer, Dropout? dropout = null) : Layer(neurons)
+public class DenseLayer(int neurons, Operation activationFunction, ParamInitializer paramInitializer, Dropout? dropout = null) : Layer()
 {
+    /// <summary>
+    /// The number of "neurons" roughly corresponds to the "breadth" of the layer.
+    /// </summary>
+    protected int Neurons { get; } = neurons;
+
     protected override void SetupLayer(Matrix input)
     {
         Matrix weights = paramInitializer.InitWeights(input.GetDimension(Dimension.Columns), Neurons);
@@ -29,7 +34,7 @@ public class DenseLayer(int neurons, Operation activation, ParamInitializer para
         Operations.AddRange([
             new WeightMultiply(weights),
             new BiasAdd(biases),
-            activation
+            activationFunction
         ]);
 
         if (dropout != null)
@@ -48,5 +53,5 @@ public class DenseLayer(int neurons, Operation activation, ParamInitializer para
 
     #endregion
 
-    public override string ToString() => $"DenseLayer (neurons={Neurons}, activation={activation}, paramInitializer={paramInitializer}, dropout={dropout})";
+    public override string ToString() => $"DenseLayer (neurons={Neurons}, activation={activationFunction}, paramInitializer={paramInitializer}, dropout={dropout})";
 }

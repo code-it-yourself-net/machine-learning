@@ -1,5 +1,5 @@
 ﻿// Machine Learning Utils
-// File name: TypedMatrix.cs
+// File name: Matrix.cs
 // Code It Yourself with .NET, 2024
 
 namespace MachineLearning;
@@ -42,7 +42,7 @@ public class Matrix
     /// </remarks>
     public Matrix(int rows, int columns)
     {
-        _array = new float[rows, columns]; // Array.CreateInstance(typeof(float), rows, columns);
+        _array = new float[rows, columns];
     }
 
     public float[,] Array => _array;
@@ -156,7 +156,7 @@ public class Matrix
         }
         return new Matrix(array);
 
-        float BoxMuller()
+        float BoxMuller() // TODO: Move to RandomUtils
         {
             // uniform(0,1] random doubles
             double u1 = random.NextDouble(); 
@@ -441,37 +441,37 @@ public class Matrix
         return new Matrix(array);
     }
 
-    public Matrix MultiplyDotWithMatrixArray(Matrix matrix)
-    {
+//    public Matrix MultiplyDotWithMatrixArray(Matrix matrix)
+//    {
 
-#if DEBUG
-        if (GetDimension(Dimension.Columns) != matrix.GetDimension(Dimension.Rows))
-            throw new Exception(NumberOfColumnsMustBeEqualToNumberOfRowsMsg);
-#endif
+//#if DEBUG
+//        if (GetDimension(Dimension.Columns) != matrix.GetDimension(Dimension.Rows))
+//            throw new Exception(NumberOfColumnsMustBeEqualToNumberOfRowsMsg);
+//#endif
 
-        int matrixColumns = matrix.Array.GetLength(1);
+//        int matrixColumns = matrix.Array.GetLength(1);
 
-        int rows = _array.GetLength(0);
-        int columns = _array.GetLength(1);
+//        int rows = _array.GetLength(0);
+//        int columns = _array.GetLength(1);
 
-        float[,] array = new float[rows, matrixColumns];
-        float[,] matrixArray = matrix.Array;
+//        float[,] array = new float[rows, matrixColumns];
+//        float[,] matrixArray = matrix.Array;
 
-        for (int i = 0; i < rows; i++)
-        {
-            for (int j = 0; j < matrixColumns; j++)
-            {
-                float sum = 0;
-                for (int k = 0; k < columns; k++)
-                {
-                    sum += _array[i, k] * matrixArray[k, j];
-                }
-                array[i, j] = sum;
-            }
-        }
+//        for (int i = 0; i < rows; i++)
+//        {
+//            for (int j = 0; j < matrixColumns; j++)
+//            {
+//                float sum = 0;
+//                for (int k = 0; k < columns; k++)
+//                {
+//                    sum += _array[i, k] * matrixArray[k, j];
+//                }
+//                array[i, j] = sum;
+//            }
+//        }
 
-        return new Matrix(array);
-    }
+//        return new Matrix(array);
+//    }
 
     /// <summary>
     /// Performs elementwise multiplication between this matrix and another matrix.
@@ -658,7 +658,7 @@ public class Matrix
     /// Calculates the sum of the matrix elements along the specified dimension.
     /// </summary>
     /// <param name="dimension">The dimension along which to calculate the sum.</param>
-    /// <returns>A new TypedMatrix object containing the sum of the elements along the specified dimension.</returns>
+    /// <returns>A new Matrix object containing the sum of the elements along the specified dimension.</returns>
     public Matrix SumBy(Dimension dimension)
     {
         int rows = _array.GetLength(0);
@@ -674,6 +674,26 @@ public class Matrix
                 sum += _array[dimension == Dimension.Rows ? j : i, dimension == Dimension.Rows ? i : j];
             }
             array[0, i] = sum;
+        }
+
+        return new Matrix(array);
+    }
+
+    public Matrix AvgBy(Dimension dimension)
+    {
+        int rows = _array.GetLength(0);
+        int columns = _array.GetLength(1);
+
+        float[,] array = new float[1, dimension == Dimension.Rows ? columns : rows];
+
+        for (int i = 0; i < (dimension == Dimension.Rows ? columns : rows); i++)
+        {
+            float sum = 0;
+            for (int j = 0; j < (dimension == Dimension.Rows ? rows : columns); j++)
+            {
+                sum += _array[dimension == Dimension.Rows ? j : i, dimension == Dimension.Rows ? i : j];
+            }
+            array[0, i] = sum / (dimension == Dimension.Rows ? rows : columns);
         }
 
         return new Matrix(array);
@@ -757,6 +777,11 @@ public class Matrix
         return new Matrix(newArray);
     }
 
+    /// <summary>
+    /// Gets a submatrix containing the specified column from the current matrix. The shape is [rows, 1].
+    /// </summary>
+    /// <param name="column"></param>
+    /// <returns></returns>
     public Matrix GetColumn(int column)
     {
         int rows = _array.GetLength(0);
@@ -773,6 +798,11 @@ public class Matrix
         return new Matrix(newArray);
     }
 
+    /// <summary>
+    /// Gets a submatrix containing the specified range of columns from the current matrix. The shape is [rows, range].
+    /// </summary>
+    /// <param name="column"></param>
+    /// <returns></returns>
     public Matrix GetColumns(Range range)
     {
         (int offset, int length) = range.GetOffsetAndLength(_array.GetLength(1));
@@ -791,9 +821,9 @@ public class Matrix
         return new Matrix(newArray);
     }
 
-#endregion
+    #endregion
 
-    #region TypedMatrix operations and functions
+    #region Matrix operations and functions
 
     public Matrix Argmax()
     {

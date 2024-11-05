@@ -2,7 +2,7 @@
 // File name: Output.cs
 // Code It Yourself with .NET, 2024
 
-namespace MachineLearning.NeuralNetwork;
+namespace MachineLearning;
 
 public enum ConsoleOutputMode
 {

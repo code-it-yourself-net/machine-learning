@@ -36,10 +36,10 @@ public class NeuralNetworkTests
         Assert.IsTrue(neuralNetwork.LossFunction.Prediction.HasSameValues(clonedNeuralNetwork.LossFunction.Prediction));
         Assert.IsTrue(neuralNetwork.LossFunction.Target.HasSameValues(clonedNeuralNetwork.LossFunction.Target));
         Assert.AreEqual(neuralNetwork.LastLoss, clonedNeuralNetwork.LastLoss);
-        Assert.AreEqual(neuralNetwork.GetParams().Length, clonedNeuralNetwork.GetParams().Length);
-        Assert.IsTrue(neuralNetwork.GetParams()[0].HasSameValues(clonedNeuralNetwork.GetParams()[0]));
-        Assert.AreEqual(neuralNetwork.GetParamGradients().Length, clonedNeuralNetwork.GetParamGradients().Length);
-        Assert.IsTrue(neuralNetwork.GetParamGradients()[0].HasSameValues(clonedNeuralNetwork.GetParamGradients()[0]));
+        Assert.AreEqual(neuralNetwork.GetAllParams().Length, clonedNeuralNetwork.GetAllParams().Length);
+        Assert.IsTrue(neuralNetwork.GetAllParams()[0].HasSameValues(clonedNeuralNetwork.GetAllParams()[0]));
+        Assert.AreEqual(neuralNetwork.GetAllParamGradients().Length, clonedNeuralNetwork.GetAllParamGradients().Length);
+        Assert.IsTrue(neuralNetwork.GetAllParamGradients()[0].HasSameValues(clonedNeuralNetwork.GetAllParamGradients()[0]));
         Assert.AreEqual(neuralNetwork.HasCheckpoint(), clonedNeuralNetwork.HasCheckpoint());
         Assert.AreEqual(neuralNetwork.ParameterCount, clonedNeuralNetwork.ParameterCount);
     }

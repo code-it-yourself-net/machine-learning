@@ -12,16 +12,20 @@ public class StochasticGradientDescentMomentum(LearningRate learningRate, float 
 
     public override void Step(NeuralNetwork neuralNetwork)
     {
-        Matrix[] @params = neuralNetwork.GetParams();
-        Matrix[] paramGrads = neuralNetwork.GetParamGradients();
+        Matrix[] @params = neuralNetwork.GetAllParams();
+        Matrix[] paramGrads = neuralNetwork.GetAllParamGradients();
 
+#if DEBUG
         if (@params.Length != paramGrads.Length)
         {
             throw new ArgumentException("Number of parameters and gradients do not match.");
         }
+#endif
 
         if (_velocities == null)
         {
+            // First step - create a new list of velocities for each parameter matrix.
+            // It will be used in the next steps.
             _velocities = new Matrix[@params.Length];
             for (int i = 0; i < @params.Length; i++)
             {
