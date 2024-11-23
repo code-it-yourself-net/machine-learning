@@ -56,6 +56,7 @@ public class ArrayUtils
             throw new Exception("Matrices must have the same shape.");
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] CreateRandomNormal(int rows, int columns, Random random, float mean = 0, float stdDev = 1)
     {
         float[,] res = new float[rows, columns];
@@ -80,6 +81,7 @@ public class ArrayUtils
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[] CreateRandomNormal(int columns, Random random, float mean = 0, float stdDev = 1)
     {
         float[] res = new float[columns];
@@ -108,6 +110,7 @@ public class ArrayUtils
     /// <param name="columns">The number of columns in the matrix.</param>
     /// <param name="random">The random number generator.</param>
     /// <returns>A new matrix filled with random values.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] CreateRandom(int rows, int columns, Random random)
     {
         // Create an instance of Array of floats using rows and columns and fill it with randoms.
@@ -122,6 +125,7 @@ public class ArrayUtils
         return res;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,,,] CreateRandom(int dim1, int dim2, int dim3, int dim4, Random _random)
     {
         float[,,,] res = new float[dim1, dim2, dim3, dim4];
@@ -141,6 +145,7 @@ public class ArrayUtils
         return res;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[] CreateRandom(int columns, Random random)
     {
         // Create an instance of Array of floats using columns and fill it with randoms.
@@ -152,6 +157,7 @@ public class ArrayUtils
         return res;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] CreateRange(int rows, int columns, float from, float to)
     {
         float[,] res = new float[rows, columns];
@@ -169,6 +175,7 @@ public class ArrayUtils
         return res;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,,,] CreateRange(int dim1, int dim2, int dim3, int dim4, float from, float to)
     {
         float[,,,] res = new float[dim1, dim2, dim3, dim4];
