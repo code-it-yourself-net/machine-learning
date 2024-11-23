@@ -15,8 +15,8 @@ namespace MachineLearning.Typed.NeuralNetwork.Operations;
 /// <summary>
 /// Weight multiplication operation for a neural network.
 /// </summary>
-/// <param name="weight">Weight matrix.</param>
-public class WeightMultiply(float[,] weight) : ParamOperation<float[,]>(weight)
+/// <param name="weights">Weight matrix.</param>
+public class WeightMultiply(float[,] weights) : ParamOperation2D<float[,]>(weights)
 {
     protected override float[,] CalcOutput(bool inference)
         => Input.MultiplyDot(Param);
@@ -34,4 +34,7 @@ public class WeightMultiply(float[,] weight) : ParamOperation<float[,]>(weight)
 
     protected override void EnsureSameShapeForParam(float[,]? param, float[,] paramGradient) 
         => EnsureSameShape(param, paramGradient);
+
+    public override int GetParamCount()
+        => Param.Length;
 }

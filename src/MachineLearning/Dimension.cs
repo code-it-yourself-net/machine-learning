@@ -7,5 +7,5 @@ namespace MachineLearning;
 public enum Dimension: int
 {
     Rows = 0,
-    Columns = 1
+    Columns = 1,
 }

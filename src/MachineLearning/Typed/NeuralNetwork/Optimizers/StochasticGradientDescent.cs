@@ -11,59 +11,54 @@ namespace MachineLearning.Typed.NeuralNetwork.Optimizers;
 
 public class StochasticGradientDescent(LearningRate learningRate) : Optimizer(learningRate)
 {
-//    public override void Step(NeuralNetwork neuralNetwork)
-//    {
-//        Matrix[] @params = neuralNetwork.GetAllParams();
-//        Matrix[] paramGrads = neuralNetwork.GetAllParamGradients();
-
-//#if DEBUG
-//        if (@params.Length != paramGrads.Length)
-//        {
-//            throw new ArgumentException("Number of parameters and gradients do not match.");
-//        }
-//#endif
-
-//        float learningRate = LearningRate.GetLearningRate();
-
-//        // Iterate through both lists in parallel
-//        for (int i = 0; i < @params.Length; i++)
-//        {
-//            Matrix param = @params[i];
-//            Matrix paramGrad = paramGrads[i];
-
-//            // Update the parameter
-//            Matrix deltaParamGrad = paramGrad.Multiply(learningRate);
-//            param.SubtractInPlace(deltaParamGrad);
-//        }
-//    }
-
-    public override void Update(Layer layer, float[] param, float[] paramGradient) 
-    { 
-        Debug.Assert(param.GetLength(0) == paramGradient.GetLength(0));
+    public override void Update(Layer layer, float[] param, float[] paramGradient)
+    {
+        Debug.Assert(param.HasSameShape(paramGradient));
 
         float learningRate = LearningRate.GetLearningRate();
 
-        for (int row = 0; row < param.Length; row++)
+        for (int i = 0; i < param.Length; i++)
         {
-            param[row] -= learningRate * paramGradient[row];
+            param[i] -= learningRate * paramGradient[i];
         }
     }
 
     public override void Update(Layer layer, float[,] param, float[,] paramGradient)
     {
-        Debug.Assert(param.GetLength(0) == paramGradient.GetLength(0));
-        Debug.Assert(param.GetLength(1) == paramGradient.GetLength(1));
+        Debug.Assert(param.HasSameShape(paramGradient));
 
         float learningRate = LearningRate.GetLearningRate();
 
-        for (int row = 0; row < param.GetLength(0); row++)
+        for (int i = 0; i < param.GetLength(0); i++)
         {
-            for (int col = 0; col < param.GetLength(1); col++)
+            for (int j = 0; j < param.GetLength(1); j++)
             {
-                param[row, col] -= learningRate * paramGradient[row, col];
+                param[i, j] -= learningRate * paramGradient[i, j];
+            }
+        }
+    }
+
+    public override void Update(Layer layer, float[,,,] param, float[,,,] paramGradient)
+    {
+        Debug.Assert(param.HasSameShape(paramGradient));
+
+        float learningRate = LearningRate.GetLearningRate();
+
+        for (int i = 0; i < param.GetLength(0); i++)
+        {
+            for (int j = 0; j < param.GetLength(1); j++)
+            {
+                for (int k = 0; k < param.GetLength(2); k++)
+                {
+                    for (int l = 0; l < param.GetLength(3); l++)
+                    {
+                        param[i, j, k, l] -= learningRate * paramGradient[i, j, k, l];
+                    }
+                }
             }
         }
     }
 
     public override string ToString() => $"StochasticGradientDescent (learningRate={LearningRate})";
+
 }

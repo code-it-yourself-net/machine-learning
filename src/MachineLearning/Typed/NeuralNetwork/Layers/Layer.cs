@@ -15,13 +15,13 @@ public abstract class Layer
     public abstract object Forward(object input, bool inference);
     public abstract object Backward(object outputGradient);
     public abstract void UpdateParams(Optimizer optimizer);
+    public abstract int GetParamCount();
 }
 
 public abstract class Layer<TIn, TOut> : Layer
     where TIn : notnull
     where TOut : notnull
 {
-    private bool _first = true;
     private TOut? _output;
     private TIn? _input;
 
@@ -37,11 +37,12 @@ public abstract class Layer<TIn, TOut> : Layer
     public TOut Forward(TIn input, bool inference)
     {
         // We store the pointer to the input array so we can check the shape of the input gradient in the backward pass..
+        bool firstPass = _input is null;
         _input = input;
-        if (_first)
+        if (firstPass)
         {
+            // First pass, set up the layer.
             SetupLayer(input);
-            _first = false;
         }
 
         Debug.Assert(_operations != null, "Operations were not set up.");
@@ -105,4 +106,12 @@ public abstract class Layer<TIn, TOut> : Layer
 
     [Conditional("DEBUG")]
     protected abstract void EnsureSameShapeForOutput(TOut? output, TOut? outputGradient);
+
+    public override int GetParamCount()
+    {
+        Debug.Assert(_operations != null, "Operations were not set up.");
+
+        return _operations.GetParamCount();
+    }
+
 }

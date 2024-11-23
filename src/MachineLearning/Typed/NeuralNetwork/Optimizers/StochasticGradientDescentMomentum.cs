@@ -12,88 +12,67 @@ namespace MachineLearning.Typed.NeuralNetwork.Optimizers;
 
 public class StochasticGradientDescentMomentum(LearningRate learningRate, float momentum) : Optimizer(learningRate)
 {
-    //private Matrix[]? _velocities;
-
-    private Dictionary<float[], float[]> _velocities1D = new();
-    private Dictionary<float[,], float[,]> _velocities2D = new();
-
-    //    public override void Step(NeuralNetwork neuralNetwork)
-    //    {
-    //        Matrix[] @params = neuralNetwork.GetAllParams();
-    //        Matrix[] paramGrads = neuralNetwork.GetAllParamGradients();
-
-    //#if DEBUG
-    //        if (@params.Length != paramGrads.Length)
-    //        {
-    //            throw new ArgumentException("Number of parameters and gradients do not match.");
-    //        }
-    //#endif
-
-    //        if (_velocities == null)
-    //        {
-    //            // First step - create a new list of velocities for each parameter matrix.
-    //            // It will be used in the next steps.
-    //            _velocities = new Matrix[@params.Length];
-    //            for (int i = 0; i < @params.Length; i++)
-    //            {
-    //                _velocities[i] = Matrix.Zeros(@params[i]);
-    //            }
-    //        }
-
-    //        float learningRate = LearningRate.GetLearningRate();
-
-    //        // Iterate through both lists in parallel
-    //        for (int i = 0; i < @params.Length; i++)
-    //        {
-    //            Matrix param = @params[i];
-    //            Matrix paramGrad = paramGrads[i];
-    //            Matrix velocity = _velocities[i];
-
-    //            // Update the velocity
-    //            velocity.MultiplyInPlace(momentum);
-    //            Matrix deltaParamGrad = paramGrad.Multiply(learningRate);
-    //            velocity.AddInPlace(deltaParamGrad);
-
-    //            // Update the parameter
-    //            param.SubtractInPlace(velocity);
-    //        }
-    //    }
-
-    public override string ToString() => $"StochasticGradientDescentMomentum (learningRate={LearningRate}, momentum={momentum})";
+    private Dictionary<float[], float[]> _velocities1D = [];
+    private Dictionary<float[,], float[,]> _velocities2D = [];
+    private Dictionary<float[,,,], float[,,,]> _velocities4D = [];
 
     public override void Update(Layer layer, float[] param, float[] paramGradient)
     {
-        Debug.Assert(param.GetLength(0) == paramGradient.GetLength(0));
+        Debug.Assert(param.HasSameShape(paramGradient));
 
         float learningRate = LearningRate.GetLearningRate();
 
         float[] velocities = GetOrCreateVelocities(param);
 
-        for (int row = 0; row < param.Length; row++)
+        for (int i = 0; i < param.Length; i++)
         {
-            velocities[row] = velocities[row] * momentum + learningRate * paramGradient[row];
-            param[row] -= velocities[row];
+            velocities[i] = velocities[i] * momentum + learningRate * paramGradient[i];
+            param[i] -= velocities[i];
         }
     }
 
     public override void Update(Layer layer, float[,] param, float[,] paramGradient)
     {
-        Debug.Assert(param.GetLength(0) == paramGradient.GetLength(0));
-        Debug.Assert(param.GetLength(1) == paramGradient.GetLength(1));
+        Debug.Assert(param.HasSameShape(paramGradient));
 
         float learningRate = LearningRate.GetLearningRate();
 
         float[,] velocities = GetOrCreateVelocities(param);
 
-        for (int row = 0; row < param.GetLength(0); row++)
+        for (int i = 0; i < param.GetLength(0); i++)
         {
-            for (int col = 0; col < param.GetLength(1); col++)
+            for (int j = 0; j < param.GetLength(1); j++)
             {
-                velocities[row, col] = velocities[row, col] * momentum + learningRate * paramGradient[row, col];
-                param[row, col] -= velocities[row, col];
+                velocities[i, j] = velocities[i, j] * momentum + learningRate * paramGradient[i, j];
+                param[i, j] -= velocities[i, j];
             }
         }
     }
+
+    public override void Update(Layer layer, float[,,,] param, float[,,,] paramGradient)
+    {
+        Debug.Assert(param.HasSameShape(paramGradient));
+
+        float learningRate = LearningRate.GetLearningRate();
+
+        float[,,,] velocities = GetOrCreateVelocities(param);
+
+        for (int i = 0; i < param.GetLength(0); i++)
+        {
+            for (int j = 0; j < param.GetLength(1); j++)
+            {
+                for (int k = 0; k < param.GetLength(2); k++)
+                {
+                    for (int l = 0; l < param.GetLength(3); l++)
+                    {
+                        velocities[i, j, k, l] = velocities[i, j, k, l] * momentum + learningRate * paramGradient[i, j, k, l];
+                        param[i, j, k, l] -= velocities[i, j, k, l];
+                    }
+                }
+            }
+        }
+    }
+    
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private float[] GetOrCreateVelocities(float[] param)
@@ -134,16 +113,104 @@ public class StochasticGradientDescentMomentum(LearningRate learningRate, float 
             _velocities2D.Add(param, velocities);
             return velocities;
         }
-
-        //if (_velocities2D.ContainsKey(param))
-        //{
-        //    return _velocities2D[param];
-        //}
-        //else
-        //{
-        //    float[,] velocities = new float[param.GetLength(0), param.GetLength(1)];
-        //    _velocities2D.Add(param, velocities);
-        //    return velocities;
-        //}
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private float[,,,] GetOrCreateVelocities(float[,,,] param)
+    {
+        if (_velocities4D.TryGetValue(param, out float[,,,]? velocities))
+        {
+            return velocities;
+        }
+        else
+        {
+            velocities = new float[param.GetLength(0), param.GetLength(1), param.GetLength(2), param.GetLength(3)];
+            _velocities4D.Add(param, velocities);
+            return velocities;
+        }
+    }
+
+    public override string ToString() => $"StochasticGradientDescentMomentum (learningRate={LearningRate}, momentum={momentum})";
 }
+
+/*
+ 
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+
+using MachineLearning.NeuralNetwork.LearningRates;
+using MachineLearning.Typed.NeuralNetwork.Layers;
+
+namespace MachineLearning.Typed.NeuralNetwork.Optimizers;
+
+public class StochasticGradientDescentMomentum(LearningRate learningRate, float momentum) : Optimizer(learningRate)
+{
+    private Dictionary<Array, Array> _velocities = new();
+
+    public override void Update(Layer layer, float[] param, float[] paramGradient)
+    {
+        UpdateParameters(param, paramGradient, momentum);
+    }
+
+    public override void Update(Layer layer, float[,] param, float[,] paramGradient)
+    {
+        UpdateParameters(param, paramGradient, momentum);
+    }
+
+    public override void Update(Layer layer, float[,,,] param, float[,,,] paramGradient)
+    {
+        UpdateParameters(param, paramGradient, momentum);
+    }
+
+    private void UpdateParameters<T>(T param, T paramGradient, float momentum) where T : Array
+    {
+        Debug.Assert(param.HasSameShape(paramGradient));
+
+        float learningRate = LearningRate.GetLearningRate();
+        T velocities = GetOrCreateVelocities(param);
+
+        int[] indices = new int[param.Rank];
+        UpdateRecursive(param, paramGradient, velocities, learningRate, momentum, indices, 0);
+    }
+
+    private void UpdateRecursive<T>(T param, T paramGradient, T velocities, float learningRate, float momentum, int[] indices, int dimension) where T : Array
+    {
+        int length = param.GetLength(dimension);
+        for (int i = 0; i < length; i++)
+        {
+            indices[dimension] = i;
+            if (dimension == param.Rank - 1)
+            {
+                float velocity = (float)velocities.GetValue(indices);
+                float gradient = (float)paramGradient.GetValue(indices);
+                velocity = velocity * momentum + learningRate * gradient;
+                velocities.SetValue(velocity, indices);
+                param.SetValue((float)param.GetValue(indices) - velocity, indices);
+            }
+            else
+            {
+                UpdateRecursive(param, paramGradient, velocities, learningRate, momentum, indices, dimension + 1);
+            }
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private T GetOrCreateVelocities<T>(T param) where T : Array
+    {
+        if (_velocities.TryGetValue(param, out Array? velocities))
+        {
+            return (T)velocities;
+        }
+        else
+        {
+            T newVelocities = (T)Activator.CreateInstance(typeof(T), param.GetLengths());
+            _velocities.Add(param, newVelocities);
+            return newVelocities;
+        }
+    }
+
+    public override string ToString() => $"StochasticGradientDescentMomentum (learningRate={LearningRate}, momentum={momentum})";
+}
+
+
+ */

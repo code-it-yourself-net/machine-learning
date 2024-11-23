@@ -13,7 +13,7 @@ namespace MachineLearning.Typed.NeuralNetwork.Operations;
 /// Computes bias addition.
 /// </summary>
 /// <param name="bias">Bias matrix.</param>
-public class BiasAdd(float[] bias) : ParamOperation<float[]>(bias)
+public class BiasAdd(float[] bias) : ParamOperation2D<float[]>(bias)
 {
 
     protected override float[,] CalcOutput(bool inference) 
@@ -37,4 +37,7 @@ public class BiasAdd(float[] bias) : ParamOperation<float[]>(bias)
 
     protected override void EnsureSameShapeForParam(float[]? param, float[] paramGradient) 
         => EnsureSameShape(param, paramGradient);
+
+    public override int GetParamCount() 
+        => Param.Length;
 }

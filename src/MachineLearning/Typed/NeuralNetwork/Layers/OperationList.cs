@@ -8,6 +8,7 @@
 // Code It Yourself with .NET, 2024
 
 using MachineLearning.Typed.NeuralNetwork.Operations;
+using MachineLearning.Typed.NeuralNetwork.Operations.Interfaces;
 using MachineLearning.Typed.NeuralNetwork.Optimizers;
 
 namespace MachineLearning.Typed.NeuralNetwork.Layers;
@@ -40,9 +41,16 @@ public class OperationList<TIn, TOut> : List<Operation>
     /// <param name="layer">The layer this operation list belongs to.</param>
     public void UpdateParams(Layer layer, Optimizer optimizer)
     {
-        foreach (ParamOperation operation in this.OfType<ParamOperation>())
+        foreach (IParameterUpdater operation in this.OfType<IParameterUpdater>())
         {
             operation.UpdateParams(layer, optimizer);
         }
+    }
+
+    public int GetParamCount()
+    {
+        return this
+            .OfType<IParameterCountProvider>()
+            .Sum(po => (int?)po.GetParamCount()) ?? 0;
     }
 }

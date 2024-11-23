@@ -60,12 +60,14 @@ public abstract class Trainer<TInputData, TPrediction>(
         Func<NeuralNetwork<TInputData, TPrediction>, TInputData, TPrediction, float>? evalFunction = null,
         int epochs = 100,
         int evalEveryEpochs = 10,
+        int logEveryEpochs = 1,
         int batchSize = 32,
         bool earlyStop = false,
         bool restart = true)
     {
         Stopwatch trainWatch = Stopwatch.StartNew();
 
+        logger?.LogInformation("");
         logger?.LogInformation("===== Begin Log =====");
         logger?.LogInformation("Fit started with params: epochs: {epochs}, batchSize: {batchSize}, optimizer: {optimizer}, random: {random}.", epochs, batchSize, optimizer, random);
         logger?.LogInformation("Model layers:");
@@ -92,10 +94,13 @@ public abstract class Trainer<TInputData, TPrediction>(
         {
             logger?.LogInformation("Epoch {epoch}/{epochs} started.", epoch, epochs);
 
-            bool evaluationEpoch = epoch % evalEveryEpochs == 0;
+            bool lastEpoch = epoch == epochs;
+            bool evaluationEpoch = epoch % evalEveryEpochs == 0 || lastEpoch;
+            bool logEpoch = epoch % logEveryEpochs == 0 || lastEpoch;
+
             bool eval = xTest is not null && yTest is not null && evaluationEpoch;
 
-            if ((evaluationEpoch && consoleOutputMode == ConsoleOutputMode.OnlyOnEval) || consoleOutputMode == ConsoleOutputMode.Always)
+            if ((logEpoch && consoleOutputMode == ConsoleOutputMode.OnlyOnEval) || consoleOutputMode == ConsoleOutputMode.Always)
                 WriteLine($"Epoch {epoch}/{epochs}...");
 
             // Epoch should be later than 1 to save the first checkpoint.
@@ -134,7 +139,7 @@ public abstract class Trainer<TInputData, TPrediction>(
             }
             stepWatch.Stop();
 
-            if (trainLoss is not null && evaluationEpoch)
+            if (trainLoss is not null && logEpoch)
             {
                 if (consoleOutputMode > ConsoleOutputMode.Disable)
                     WriteLine($"Train loss (average): {trainLoss.Value / allSteps}");
@@ -185,6 +190,14 @@ public abstract class Trainer<TInputData, TPrediction>(
         logger?.LogInformation("Fit finished in {elapsedSecond:F2} s.", elapsedSeconds);
         if (consoleOutputMode > ConsoleOutputMode.Disable)
             WriteLine($"Fit finished in {elapsedSeconds:F2} s.");
+
+        int paramCount = neuralNetwork.GetParamCount();
+        logger?.LogInformation("{paramCount:n0} parameters trained.", paramCount);
+        if (consoleOutputMode > ConsoleOutputMode.Disable)
+            WriteLine($"{paramCount:n0} parameters trained.");
+
+        logger?.LogInformation("===== End Log =====");
+        
     }
 
 

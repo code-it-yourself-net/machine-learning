@@ -50,17 +50,17 @@ public abstract class Operation<TIn, TOut> : Operation
     public virtual TIn Backward(TOut outputGradient)
     {
         EnsureSameShapeForOutput(_output, outputGradient);
-        TIn? inputGradient = CalcInputGradient(outputGradient);
+        TIn inputGradient = CalcInputGradient(outputGradient);
 
         EnsureSameShapeForInput(_input, inputGradient);
         return inputGradient;
     }
 
     [Conditional("DEBUG")]
-    protected abstract void EnsureSameShapeForInput(TIn? input, TIn? inputGradient);
+    protected abstract void EnsureSameShapeForInput(TIn? input, TIn inputGradient);
 
     [Conditional("DEBUG")]
-    protected abstract void EnsureSameShapeForOutput(TOut? output, TOut? outputGradient);
+    protected abstract void EnsureSameShapeForOutput(TOut? output, TOut outputGradient);
 
     /// <summary>
     /// Computes output.

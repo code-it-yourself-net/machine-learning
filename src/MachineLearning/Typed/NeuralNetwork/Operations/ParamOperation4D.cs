@@ -1,20 +1,19 @@
 ﻿// Machine Learning Utils
-// File name: ParamOperation.cs
+// File name: ParamOperation4D.cs
 // Code It Yourself with .NET, 2024
-
-// This class is derived from the content originally published in the book Deep Learning from Scratch: Building with
-// Python from First Principles by Seth Weidman. Some comments here are copied/modified from the original text.
 
 using System.Diagnostics;
 
 using MachineLearning.NeuralNetwork.Exceptions;
 using MachineLearning.Typed.NeuralNetwork.Layers;
+using MachineLearning.Typed.NeuralNetwork.Operations.Interfaces;
 using MachineLearning.Typed.NeuralNetwork.Optimizers;
 
 namespace MachineLearning.Typed.NeuralNetwork.Operations;
 
-public abstract class ParamOperation : Operation2D
+public abstract class ParamOperation4D : Operation4D, IParameterCountProvider, IParameterUpdater
 {
+    public abstract int GetParamCount();
     public abstract void UpdateParams(Layer layer, Optimizer optimizer);
 }
 
@@ -22,17 +21,17 @@ public abstract class ParamOperation : Operation2D
 /// An Operation with parameters of type TParam.
 /// </summary>
 /// <param name="param">Parameter matrix.</param>
-public abstract class ParamOperation<TParam>(TParam param) : ParamOperation
+public abstract class ParamOperation4D<TParam>(TParam param) : ParamOperation4D
 {
     private TParam? _paramGradient;
 
     protected TParam Param => param;
 
-    protected TParam ParamGradient => _paramGradient ?? throw new NotYetCalculatedException();
+    internal TParam ParamGradient => _paramGradient ?? throw new NotYetCalculatedException();
 
-    public override float[,] Backward(float[,] outputGradient)
+    public override float[,,,] Backward(float[,,,] outputGradient)
     {
-        float[,] inputGrad = base.Backward(outputGradient);
+        float[,,,] inputGrad = base.Backward(outputGradient);
 
         _paramGradient = CalcParamGradient(outputGradient);
         EnsureSameShapeForParam(param, _paramGradient);
@@ -42,11 +41,11 @@ public abstract class ParamOperation<TParam>(TParam param) : ParamOperation
     [Conditional("DEBUG")]
     protected abstract void EnsureSameShapeForParam(TParam? param, TParam paramGradient);
 
-    protected abstract TParam CalcParamGradient(float[,] outputGradient);
+    protected abstract TParam CalcParamGradient(float[,,,] outputGradient);
 
-    protected override Operation<float[,], float[,]> CloneBase()
+    protected override Operation<float[,,,], float[,,,]> CloneBase()
     {
-        ParamOperation<TParam> clone = (ParamOperation<TParam>)base.CloneBase();
+        ParamOperation4D<TParam> clone = (ParamOperation4D<TParam>)base.CloneBase();
         //clone._paramGradient = _paramGradient?.Clone();
         return clone;
     }

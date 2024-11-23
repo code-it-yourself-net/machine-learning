@@ -93,6 +93,9 @@ public abstract class NeuralNetwork<TInputData, TPrediction>: NeuralNetwork
         return clone;
     }
 
+    public int GetParamCount()
+        => _layers.Sum(l => (int?)l.GetParamCount()) ?? 0;
+
     #endregion Checkpoint
 
 }

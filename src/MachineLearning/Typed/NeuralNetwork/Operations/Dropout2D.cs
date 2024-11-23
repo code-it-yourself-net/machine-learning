@@ -3,10 +3,11 @@
 // Code It Yourself with .NET, 2024
 
 using MachineLearning.NeuralNetwork.Exceptions;
+using MachineLearning.Typed.NeuralNetwork.Operations.Interfaces;
 
 namespace MachineLearning.Typed.NeuralNetwork.Operations;
 
-public class Dropout(float keepProb = 0.8f, SeededRandom? random = null) : Operation2D
+public class Dropout2D(float keepProb = 0.8f, SeededRandom? random = null) : Operation2D, IParameterCountProvider
 {
     private float[,]? _mask;
 
@@ -26,6 +27,9 @@ public class Dropout(float keepProb = 0.8f, SeededRandom? random = null) : Opera
     protected override float[,] CalcInputGradient(float[,] outputGradient) 
         => outputGradient.MultiplyElementwise(_mask ?? throw new NotYetCalculatedException());
 
-    public override string ToString() => $"Dropout (keepProb={keepProb}, seed={random?.Seed})";
-    
+    public override string ToString() => $"Dropout2D (keepProb={keepProb}, seed={random?.Seed})";
+
+    public int GetParamCount()
+        => _mask?.Length ?? 0;
+
 }

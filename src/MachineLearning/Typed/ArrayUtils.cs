@@ -3,6 +3,7 @@
 // Code It Yourself with .NET, 2024
 
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace MachineLearning.Typed;
 
@@ -23,6 +24,16 @@ public class ArrayUtils
             }
         }
         return matrix;
+    }
+
+    [Conditional("DEBUG")]
+    public static void EnsureSameShape(float[,,,]? matrix1, float[,,,]? matrix2)
+    {
+        if (matrix1 is null || matrix2 is null)
+            throw new ArgumentException("Matrix is null.");
+
+        if (!matrix1.HasSameShape(matrix2))
+            throw new Exception("Matrices must have the same shape.");
     }
 
     [Conditional("DEBUG")]
@@ -111,6 +122,25 @@ public class ArrayUtils
         return res;
     }
 
+    public static float[,,,] CreateRandom(int dim1, int dim2, int dim3, int dim4, Random _random)
+    {
+        float[,,,] res = new float[dim1, dim2, dim3, dim4];
+        for (int i = 0; i < dim1; i++)
+        {
+            for (int j = 0; j < dim2; j++)
+            {
+                for (int k = 0; k < dim3; k++)
+                {
+                    for (int l = 0; l < dim4; l++)
+                    {
+                        res[i, j, k, l] = _random.NextSingle() - 0.5f;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
     public static float[] CreateRandom(int columns, Random random)
     {
         // Create an instance of Array of floats using columns and fill it with randoms.
@@ -139,9 +169,37 @@ public class ArrayUtils
         return res;
     }
 
-    public static float[] CreateZeros(int columns) => new float[columns];
+    public static float[,,,] CreateRange(int dim1, int dim2, int dim3, int dim4, float from, float to)
+    {
+        float[,,,] res = new float[dim1, dim2, dim3, dim4];
+        float step = (to - from) / (dim1 * dim2 * dim3 * dim4);
+        for (int i = 0; i < dim1; i++)
+        {
+            for (int j = 0; j < dim2; j++)
+            {
+                for (int k = 0; k < dim3; k++)
+                {
+                    for (int l = 0; l < dim4; l++)
+                    {
+                        res[i, j, k, l] = from + step * (i * dim2 * dim3 * dim4 + j * dim3 * dim4 + k * dim4 + l);
+                    }
+                }
+            }
+        }
+        return res;
+    }
 
-    public static float[,] CreateZeros(float[,] matrix) => new float[matrix.GetLength(0), matrix.GetLength(1)];
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float[] CreateZeros(int columns) 
+        => new float[columns];
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float[,] CreateZeros(float[,] matrix) 
+        => new float[matrix.GetLength(0), matrix.GetLength(1)];
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float[,,,] CreateZeros(float[,,,] matrix) 
+        => new float[matrix.GetLength(0), matrix.GetLength(1), matrix.GetLength(2), matrix.GetLength(3)];
 
     public static (float[,] xPermuted, float[,] yPermuted) PermuteData(float[,] x, float[,] y, Random random)
     {
@@ -150,6 +208,26 @@ public class ArrayUtils
         int[] indices = [.. Enumerable.Range(0, x.GetLength((int)Dimension.Rows)).OrderBy(i => random.Next())];
 
         float[,] xPermuted = CreateZeros(x);
+        float[,] yPermuted = CreateZeros(y);
+
+        for (int i = 0; i < x.GetLength((int)Dimension.Rows); i++)
+        {
+            //xPermuted[i] = x[indices[i]];
+            //yPermuted[i] = y[indices[i]];
+            xPermuted.SetRow(i, x.GetRow(indices[i]));
+            yPermuted.SetRow(i, y.GetRow(indices[i]));
+        }
+
+        return (xPermuted, yPermuted);
+    }
+
+    public static (float[,,,] xPermuted, float[,] yPermuted) PermuteData(float[,,,] x, float[,] y, Random random)
+    {
+        Debug.Assert(x.GetLength((int)Dimension.Rows) == y.GetLength((int)Dimension.Rows));
+
+        int[] indices = [.. Enumerable.Range(0, x.GetLength((int)Dimension.Rows)).OrderBy(i => random.Next())];
+
+        float[,,,] xPermuted = CreateZeros(x);
         float[,] yPermuted = CreateZeros(y);
 
         for (int i = 0; i < x.GetLength((int)Dimension.Rows); i++)

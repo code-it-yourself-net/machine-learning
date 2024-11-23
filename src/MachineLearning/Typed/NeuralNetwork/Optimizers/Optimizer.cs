@@ -5,6 +5,7 @@
 // This class is derived from the content originally published in the book Deep Learning from Scratch: Building with
 // Python from First Principles by Seth Weidman. Some comments here are copied/modified from the original text.
 
+
 using MachineLearning.NeuralNetwork.LearningRates;
 using MachineLearning.Typed.NeuralNetwork.Layers;
 
@@ -26,4 +27,6 @@ public abstract class Optimizer(LearningRate learningRate)
     public abstract void Update(Layer layer, float[] param, float[] paramGradient);
 
     public abstract void Update(Layer layer, float[,] param, float[,] paramGradient);
+
+    public abstract void Update(Layer layer, float[,,,] param, float[,,,] paramGradient);
 }

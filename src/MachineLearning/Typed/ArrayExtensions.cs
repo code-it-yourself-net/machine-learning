@@ -2,6 +2,7 @@
 // File name: ArrayExtensions.cs
 // Code It Yourself with .NET, 2024
 
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace MachineLearning.Typed;
@@ -22,7 +23,7 @@ public static class ArrayExtensions
     /// <summary>
     /// Creates a new matrix filled with ones, with the same dimensions as the specified matrix.
     /// </summary>
-    /// <param name="matrix">The matrix used to determine the dimensions of the new matrix.</param>
+    /// <param name="source">The matrix used to determine the dimensions of the new matrix.</param>
     /// <returns>A new matrix filled with ones.</returns>
     public static float[,] AsOnes(this float[,] source)
     {
@@ -30,11 +31,42 @@ public static class ArrayExtensions
         int columns = source.GetLength(1);
         float[,] res = new float[rows, columns];
 
-        for (int row = 0; row < rows; row++)
+        for (int i = 0; i < rows; i++)
         {
-            for (int col = 0; col < columns; col++)
+            for (int j = 0; j < columns; j++)
             {
-                res[row, col] = 1;
+                res[i, j] = 1;
+            }
+        }
+
+        return res;
+    }
+
+    /// <summary>
+    /// Creates a new matrix filled with ones, with the same dimensions as the specified matrix.
+    /// </summary>
+    /// <param name="source">The matrix used to determine the dimensions of the new matrix.</param>
+    /// <returns>A new matrix filled with ones.</returns>
+    public static float[,,,] AsOnes(this float[,,,] source)
+    {
+        int dim1 = source.GetLength(0);
+        int dim2 = source.GetLength(1);
+        int dim3 = source.GetLength(2);
+        int dim4 = source.GetLength(3);
+
+        float[,,,] res = new float[dim1, dim2, dim3, dim4];
+
+        for (int i = 0; i < dim1; i++)
+        {
+            for (int j = 0; j < dim2; j++)
+            {
+                for (int k = 0; k < dim3; k++)
+                {
+                    for (int l = 0; l < dim4; l++)
+                    {
+                        res[i, j, k, l] = 1;
+                    }
+                }
             }
         }
 
@@ -48,12 +80,12 @@ public static class ArrayExtensions
     /// <returns>A new matrix filled with ones.</returns>
     public static float[] AsOnes(this float[] source)
     {
-        int columns = source.GetLength(0);
-        float[] res = new float[columns];
+        int length = source.GetLength(0);
+        float[] res = new float[length];
 
-        for (int col = 0; col < columns; col++)
+        for (int i = 0; i < length; i++)
         {
-            res[col] = 1;
+            res[i] = 1;
         }
 
         return res;
@@ -78,6 +110,33 @@ public static class ArrayExtensions
         return res;
     }
 
+    public static float[,,,] AsZeroOnes(this float[,,,] source, float onesProbability, Random random)
+    {
+        int dim1 = source.GetLength(0);
+        int dim2 = source.GetLength(1);
+        int dim3 = source.GetLength(2);
+        int dim4 = source.GetLength(3);
+
+        float[,,,] res = new float[dim1, dim2, dim3, dim4];
+        for (int i = 0; i < dim1; i++)
+        {
+            for (int j = 0; j < dim2; j++)
+            {
+                for (int k = 0; k < dim3; k++)
+                {
+                    for (int l = 0; l < dim4; l++)
+                    {
+                        if (random.NextDouble() < onesProbability)
+                        {
+                            res[i, j, k, l] = 1;
+                        }
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
     #endregion
 
     #region Slices, Rows, and Columns
@@ -89,15 +148,15 @@ public static class ArrayExtensions
     /// <returns></returns>
     public static float[,] GetColumn(this float[,] source, int column)
     {
-        int rows = source.GetLength((int)Dimension.Rows);
+        int rows = source.GetLength(0);
 
         // Create an array to store the column.
         float[,] res = new float[rows, 1];
 
-        for (int row = 0; row < rows; row++)
+        for (int i = 0; i < rows; i++)
         {
             // Access each element in the specified column.
-            res[row, 0] = source[row, column];
+            res[i, 0] = source[i, column];
         }
 
         return res;
@@ -109,16 +168,16 @@ public static class ArrayExtensions
     /// <returns></returns>
     public static float[,] GetColumns(this float[,] source, Range range)
     {
-        (int offset, int length) = range.GetOffsetAndLength(source.GetLength((int)Dimension.Columns));
+        (int offset, int length) = range.GetOffsetAndLength(source.GetLength(1));
 
-        int rows = source.GetLength((int)Dimension.Rows);
+        int rows = source.GetLength(0);
         float[,] res = new float[rows, length];
 
-        for (int row = 0; row < rows; row++)
+        for (int i = 0; i < rows; i++)
         {
-            for (int col = 0; col < length; col++)
+            for (int j = 0; j < length; j++)
             {
-                res[row, col] = source[row, col + offset];
+                res[i, j] = source[i, j + offset];
             }
         }
 
@@ -148,6 +207,30 @@ public static class ArrayExtensions
         return res;
     }
 
+    public static float[,,] GetRow(this float[,,,] source, int row)
+    {
+        int dim2 = source.GetLength(1);
+        int dim3 = source.GetLength(2);
+        int dim4 = source.GetLength(3);
+
+        // Create an array to store the row.
+        float[,,] res = new float[dim2, dim3, dim4];
+        for (int i = 0; i < dim2; i++)
+        {
+            for (int j = 0; j < dim3; j++)
+            {
+                for (int k = 0; k < dim4; k++)
+                {
+                    // Access each element in the specified row.
+                    res[i, j, k] = source[row, i, j, k];
+                }
+            }
+        }
+
+        return res;
+
+    }
+
     /// <summary>
     /// Gets a submatrix containing the specified range of rows from the current matrix.
     /// </summary>
@@ -174,6 +257,34 @@ public static class ArrayExtensions
         return res;
     }
 
+    public static float[,,,] GetRows(this float[,,,] source, Range range)
+    {
+        (int offset, int length) = range.GetOffsetAndLength(source.GetLength(0));
+
+        int dim2 = source.GetLength(1);
+        int dim3 = source.GetLength(2);
+        int dim4 = source.GetLength(3);
+
+        float[,,,] res = new float[length, dim2, dim3, dim4];
+
+        for (int i = 0; i < length; i++)
+        {
+            for (int j = 0; j < dim2; j++)
+            {
+                for (int k = 0; k < dim3; k++)
+                {
+                    for (int l = 0; l < dim4; l++)
+                    {
+                        res[i, j, k, l] = source[i + offset, j, k, l];
+                    }
+                }
+            }
+        }
+
+        return res;
+
+    }
+
     /// <summary>
     /// Sets the values of a specific row in the matrix.
     /// </summary>
@@ -188,9 +299,31 @@ public static class ArrayExtensions
             throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
 #endif
 
-        for (int col = 0; col < source.GetLength(1); col++)
+        int columns = source.GetLength(1);
+        for (int col = 0; col < columns; col++)
         {
             source[rowIndex, col] = row[col];
+        }
+    }
+
+    public static void SetRow(this float[,,,] source, int rowIndex, float[,,] row)
+    {
+        Debug.Assert(rowIndex >= 0 && rowIndex < source.GetLength(0), "Row index out of bounds.");
+
+        //int rows = source.GetLength(0);
+        int cols = source.GetLength(1);
+        int depths = source.GetLength(2);
+        int channels = source.GetLength(3);
+
+        for (int col = 0; col < cols; col++)
+        {
+            for (int depth = 0; depth < depths; depth++)
+            {
+                for (int channel = 0; channel < channels; channel++)
+                {
+                    source[rowIndex, col, depth, channel] = row[col, depth, channel];
+                }
+            }
         }
     }
 
@@ -202,13 +335,42 @@ public static class ArrayExtensions
     {
         float max = float.MinValue;
 
-        for (int row = 0; row < source.GetLength(0); row++)
+        int rows = source.GetLength(0);
+        int cols = source.GetLength(1);
+
+        for (int row = 0; row < rows; row++)
         {
-            for (int col = 0; col < source.GetLength(1); col++)
+            for (int col = 0; col < cols; col++)
             {
                 max = Math.Max(max, source[row, col]);
             }
         }
+        return max;
+    }
+
+    public static float Max(this float[,,,] source)
+    {
+        float max = float.MinValue;
+
+        int dim1 = source.GetLength(0);
+        int dim2 = source.GetLength(1);
+        int dim3 = source.GetLength(2);
+        int dim4 = source.GetLength(3);
+
+        for (int i = 0; i < dim1; i++)
+        {
+            for (int j = 0; j < dim2; j++)
+            {
+                for (int k = 0; k < dim3; k++)
+                {
+                    for (int l = 0; l < dim4; l++)
+                    {
+                        max = Math.Max(max, source[i, j, k, l]);
+                    }
+                }
+            }
+        }
+
         return max;
     }
 
@@ -218,17 +380,49 @@ public static class ArrayExtensions
     /// <returns>The mean of all elements in the matrix.</returns>
     public static float Mean(this float[,] source) => source.Sum() / source.Length;
 
+    public static float Mean(this float[,,,] source) => source.Sum() / source.Length;
+
     public static float Min(this float[,] source)
     {
         float min = float.MaxValue;
 
-        for (int row = 0; row < source.GetLength(0); row++)
+        int rows = source.GetLength(0);
+        int cols = source.GetLength(1);
+
+        for (int row = 0; row < rows; row++)
         {
-            for (int col = 0; col < source.GetLength(1); col++)
+            for (int col = 0; col < cols; col++)
             {
                 min = Math.Min(min, source[row, col]);
             }
         }
+        return min;
+    }
+
+    public static float Min(this float[,,,] source)
+    {
+        float min = float.MaxValue;
+
+        int dim1 = source.GetLength(0);
+        int dim2 = source.GetLength(1);
+        int dim3 = source.GetLength(2);
+        int dim4 = source.GetLength(3);
+
+        for(int i = 0; i < dim1; i++)
+        {
+            for (int j = 0; j < dim2; j++)
+            {
+                for (int k = 0; k < dim3; k++)
+                {
+                    for (int l = 0; l < dim4; l++)
+                    {
+                        min = Math.Min(min, source[i, j, k, l]);
+                    }
+                }
+            }
+        }
+
+
         return min;
     }
 
@@ -240,11 +434,46 @@ public static class ArrayExtensions
     {
         float mean = source.Mean();
         float sum = 0;
-        for (int row = 0; row < source.GetLength(0); row++)
+
+        int rows = source.GetLength(0);
+        int cols = source.GetLength(1);
+
+        for (int i = 0; i < rows; i++)
         {
-            for (int col = 0; col < source.GetLength(1); col++)
+            for (int j = 0; j < cols; j++)
             {
-                sum += MathF.Pow(source[row, col] - mean, 2);
+                sum += MathF.Pow(source[i, j] - mean, 2);
+            }
+        }
+
+        return (float)Math.Sqrt(sum / source.Length);
+    }
+
+    /// <summary>
+    /// Calculates the standard deviation.
+    /// </summary>
+    /// <returns></returns>
+    public static float Std(this float[,,,] source)
+    {
+        float mean = source.Mean();
+        float sum = 0;
+
+        int dim1 = source.GetLength(0);
+        int dim2 = source.GetLength(1);
+        int dim3 = source.GetLength(2);
+        int dim4 = source.GetLength(3);
+
+        for (int i = 0; i < dim1; i++)
+        {
+            for (int j = 0; j < dim2; j++)
+            {
+                for (int k = 0; k < dim3; k++)
+                {
+                    for (int l = 0; l < dim4; l++)
+                    {
+                        sum += MathF.Pow(source[i, j, k, l] - mean, 2);
+                    }
+                }
             }
         }
 
@@ -259,12 +488,41 @@ public static class ArrayExtensions
     {
         // Sum over all elements.
         float sum = 0;
+        int rows = source.GetLength(0);
+        int cols = source.GetLength(1);
 
-        for (int row = 0; row < source.GetLength(0); row++)
+        for (int row = 0; row < rows; row++)
         {
-            for (int col = 0; col < source.GetLength(1); col++)
+            for (int col = 0; col < cols; col++)
             {
                 sum += source[row, col];
+            }
+        }
+
+        return sum;
+    }
+
+    public static float Sum(this float[,,,] source)
+    {
+        // Sum over all elements.
+        float sum = 0;
+
+        int rows = source.GetLength(0);
+        int cols = source.GetLength(1);
+        int depth = source.GetLength(2);
+        int channels = source.GetLength(3);
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                for (int k = 0; k < depth; k++)
+                {
+                    for (int l = 0; l < channels; l++)
+                    {
+                        sum += source[i, j, k, l];
+                    }
+                }
             }
         }
 
@@ -344,24 +602,76 @@ public static class ArrayExtensions
 
     public static void AddInPlace(this float[,] source, float scalar)
     {
-        for (int row = 0; row < source.GetLength(0); row++)
+        int rows = source.GetLength(0);
+        int columns = source.GetLength(1);
+
+        for (int row = 0; row < rows; row++)
         {
-            for (int col = 0; col < source.GetLength(1); col++)
+            for (int col = 0; col < columns; col++)
             {
                 source[row, col] += scalar;
             }
         }
     }
 
+    public static void AddInPlace(this float[,,,] source, float scalar)
+    {
+        int rows = source.GetLength(0);
+        int columns = source.GetLength(1);
+        int depth = source.GetLength(2);
+        int channels = source.GetLength(3);
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                for (int k = 0; k < depth; k++)
+                {
+                    for (int l = 0; l < channels; l++)
+                    {
+                        source[i, j, k, l] += scalar;
+                    }
+                }
+            }
+        }
+
+    }
+
     public static void DivideInPlace(this float[,] source, float scalar)
     {
-        for (int row = 0; row < source.GetLength(0); row++)
+        int rows = source.GetLength(0);
+        int columns = source.GetLength(1);
+
+        for (int row = 0; row < rows; row++)
         {
-            for (int col = 0; col < source.GetLength(1); col++)
+            for (int col = 0; col < columns; col++)
             {
                 source[row, col] /= scalar;
             }
         }
+    }
+
+    public static void DivideInPlace(this float[,,,] source, float scalar)
+    {
+        int dim1 = source.GetLength(0);
+        int dim2 = source.GetLength(1);
+        int dim3 = source.GetLength(2);
+        int dim4 = source.GetLength(3);
+
+        for (int d1 = 0; d1 < dim1; d1++)
+        {
+            for (int d2 = 0; d2 < dim2; d2++)
+            {
+                for (int d3 = 0; d3 < dim3; d3++)
+                {
+                    for (int d4 = 0; d4 < dim4; d4++)
+                    {
+                        source[d1, d2, d3, d4] /= scalar;
+                    }
+                }
+            }
+        }
+
     }
 
     /// <summary>
@@ -375,11 +685,42 @@ public static class ArrayExtensions
         int columns = source.GetLength(1);
         float[,] res = new float[rows, columns];
 
-        for (int col = 0; col < rows; col++)
+        for (int row = 0; row < rows; row++)
         {
-            for (int row = 0; row < columns; row++)
+            for (int col = 0; col < columns; col++)
             {
-                res[col, row] = source[col, row] * scalar;
+                res[row, col] = source[row, col] * scalar;
+            }
+        }
+
+        return res;
+    }
+
+    /// <summary>
+    /// Multiplies each element of the matrix by a scalar value.
+    /// </summary>
+    /// <param name="scalar">The scalar value to multiply.</param>
+    /// <returns>A new matrix with each element multiplied by the scalar value.</returns>
+    public static float[,,,] Multiply(this float[,,,] source, float scalar)
+    {
+        int dim1 = source.GetLength(0);
+        int dim2 = source.GetLength(1);
+        int dim3 = source.GetLength(2);
+        int dim4 = source.GetLength(3);
+
+        float[,,,] res = new float[dim1, dim2, dim3, dim4];
+
+        for (int d1 = 0; d1 < dim1; d1++)
+        {
+            for (int d2 = 0; d2 < dim2; d2++)
+            {
+                for (int d3 = 0; d3 < dim3; d3++)
+                {
+                    for (int d4 = 0; d4 < dim4; d4++)
+                    {
+                        res[d1, d2, d3, d4] = source[d1, d2, d3, d4] * scalar;
+                    }
+                }
             }
         }
 
@@ -388,9 +729,11 @@ public static class ArrayExtensions
 
     public static void MultiplyInPlace(this float[,] source, float scalar)
     {
-        for (int row = 0; row < source.GetLength(0); row++)
+        int rows = source.GetLength(0);
+        int columns = source.GetLength(1);
+        for (int row = 0; row < rows; row++)
         {
-            for (int column = 0; column < source.GetLength(1); column++)
+            for (int column = 0; column < columns; column++)
             {
                 source[row, column] *= scalar;
             }
@@ -478,9 +821,11 @@ public static class ArrayExtensions
     /// <param name="max">The maximum value to clip the matrix elements to.</param>
     public static void ClipInPlace(this float[,] source, float min, float max)
     {
-        for (int row = 0; row < source.GetLength(0); row++)
+        int rows = source.GetLength(0);
+        int columns = source.GetLength(1);
+        for (int row = 0; row < rows; row++)
         {
-            for (int col = 0; col < source.GetLength(1); col++)
+            for (int col = 0; col < columns; col++)
             {
                 source[row, col] = MathF.Max(min, MathF.Min(max, source[row, col]));
             }
@@ -576,6 +921,50 @@ public static class ArrayExtensions
     /// <remarks>
     /// Multiplies each element of the matrix with the corresponding element of another matrix.
     /// If the dimensions of the two matrices are not the same, the smaller matrix is broadcasted to match the larger matrix.
+    /// </remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float[,,,] MultiplyElementwise(this float[,,,] source, float[,,,] matrix)
+    {
+        int dim1 = source.GetLength(0);
+        int dim2 = source.GetLength(1);
+        int dim3 = source.GetLength(2);
+        int dim4 = source.GetLength(3);
+
+        int maxDim1 = Math.Max(dim1, matrix.GetLength(0));
+        int maxDim2 = Math.Max(dim2, matrix.GetLength(1));
+        int maxDim3 = Math.Max(dim3, matrix.GetLength(2));
+        int maxDim4 = Math.Max(dim4, matrix.GetLength(3));
+
+        float[,,,] res = new float[maxDim1, maxDim2, maxDim3, maxDim4];
+
+        for (int d1 = 0; d1 < maxDim1; d1++)
+        {
+            for (int d2 = 0; d2 < maxDim2; d2++)
+            {
+                for (int d3 = 0; d3 < maxDim3; d3++)
+                {
+                    for (int d4 = 0; d4 < maxDim4; d4++)
+                    {
+                        float thisValue = source[d1 % dim1, d2 % dim2, d3 % dim3, d4 % dim4];
+                        float matrixValue = matrix[d1 % matrix.GetLength(0), d2 % matrix.GetLength(1), d3 % matrix.GetLength(2), d4 % matrix.GetLength(3)];
+                        res[d1, d2, d3, d4] = thisValue * matrixValue;
+                    }
+                }
+            }
+        }
+
+        return res;
+
+    }
+
+    /// <summary>
+    /// Performs elementwise multiplication between this matrix and another matrix.
+    /// </summary>
+    /// <param name="matrix">The matrix to multiply elementwise with.</param>
+    /// <returns>A new matrix resulting from the elementwise multiplication.</returns>
+    /// <remarks>
+    /// Multiplies each element of the matrix with the corresponding element of another matrix.
+    /// If the dimensions of the two matrices are not the same, the smaller matrix is broadcasted to match the larger matrix.
     /// If the size of this matrix is (a), and the size of matrix is (c * d), then the resulting size is (max(a,c) * d)
     /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -610,6 +999,8 @@ public static class ArrayExtensions
         return res;
     }
 
+    
+
     /// <summary>
     /// Subtracts the elements of the specified matrix from the current matrix.
     /// </summary>
@@ -635,6 +1026,32 @@ public static class ArrayExtensions
             for (int j = 0; j < columns; j++)
             {
                 res[i, j] = source[i, j] - matrix[i, j];
+            }
+        }
+
+        return res;
+    }
+
+    public static float[,,,] Subtract(this float[,,,] source, float[,,,] matrix)
+    {
+        int dim1 = source.GetLength(0);
+        int dim2 = source.GetLength(1);
+        int dim3 = source.GetLength(2);
+        int dim4 = source.GetLength(3);
+
+        float[,,,] res = new float[dim1, dim2, dim3, dim4];
+
+        for (int d1 = 0; d1 < dim1; d1++)
+        {
+            for (int d2 = 0; d2 < dim2; d2++)
+            {
+                for (int d3 = 0; d3 < dim3; d3++)
+                {
+                    for (int d4 = 0; d4 < dim4; d4++)
+                    {
+                        res[d1, d2, d3, d4] = source[d1, d2, d3, d4] - matrix[d1, d2, d3, d4];
+                    }
+                }
             }
         }
 
@@ -768,6 +1185,36 @@ public static class ArrayExtensions
     }
 
     /// <summary>
+    /// Applies the hyperbolic tangent function element-wise to the matrix.
+    /// </summary>
+    /// <returns>A new matrix with the hyperbolic tangent applied element-wise.</returns>
+    public static float[,,,] Tanh(this float[,,,] source)
+    {
+        int dim1 = source.GetLength(0);
+        int dim2 = source.GetLength(1);
+        int dim3 = source.GetLength(2);
+        int dim4 = source.GetLength(3);
+
+        float[,,,] res = new float[dim1, dim2, dim3, dim4];
+
+        for (int i = 0; i < dim1; i++)
+        {
+            for (int j = 0; j < dim2; j++)
+            {
+                for (int k = 0; k < dim3; k++)
+                {
+                    for (int l = 0; l < dim4; l++)
+                    {
+                        res[i, j, k, l] = MathF.Tanh(source[i, j, k, l]);
+                    }
+                }
+            }
+        }
+
+        return res;
+    }
+
+    /// <summary>
     /// Transposes the matrix by swapping its rows and columns.
     /// </summary>
     /// <returns>A new <see cref="float[,]"/> object representing the transposed matrix.</returns>
@@ -793,11 +1240,14 @@ public static class ArrayExtensions
 
     #region Shapes and Values
 
+    public static bool HasSameShape(this float[] source, float[] matrix)
+        => source.GetLength(0) == matrix.GetLength(0);
+
     public static bool HasSameShape(this float[,] source, float[,] matrix)
         => source.GetLength(0) == matrix.GetLength(0) && source.GetLength(1) == matrix.GetLength(1);
 
-    public static bool HasSameShape(this float[] source, float[] matrix)
-        => source.GetLength(0) == matrix.GetLength(0);
+    public static bool HasSameShape(this float[,,,] source, float[,,,] matrix)
+        => source.GetLength(0) == matrix.GetLength(0) && source.GetLength(1) == matrix.GetLength(1) && source.GetLength(2) == matrix.GetLength(2) && source.GetLength(3) == matrix.GetLength(3);
 
     public static bool HasSameValues(this float[,] source, float[,] matrix)
     {

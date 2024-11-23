@@ -16,9 +16,9 @@ public class DenseLayer : Layer<float[,], float[,]>
     private readonly int _neurons;
     private readonly Operation2D _activationFunction;
     private readonly ParamInitializer _paramInitializer;
-    private readonly Dropout? _dropout;
+    private readonly Dropout2D? _dropout;
 
-    public DenseLayer(int neurons, Operation2D activationFunction, ParamInitializer paramInitializer, Dropout? dropout = null)
+    public DenseLayer(int neurons, Operation2D activationFunction, ParamInitializer paramInitializer, Dropout2D? dropout = null)
     {
         _neurons = neurons;
         _activationFunction = activationFunction;
@@ -28,7 +28,7 @@ public class DenseLayer : Layer<float[,], float[,]>
 
     public override OperationBuilder<float[,]> OnAddOperations(OperationBuilder<float[,]> builder)
     {
-        Debug.Assert(Input != null);
+        Debug.Assert(Input != null, "Input must be not null here.");
 
         float[,] weights = _paramInitializer.InitWeights(Input.GetLength((int)Dimension.Columns), _neurons);
         float[] biases = _paramInitializer.InitBiases(_neurons);
@@ -50,5 +50,6 @@ public class DenseLayer : Layer<float[,], float[,]>
     protected override void EnsureSameShapeForOutput(float[,]? output, float[,]? outputGradient)
         => EnsureSameShape(output, outputGradient);
 
-    public override string ToString() => $"DenseLayer (neurons={_neurons}, activation={_activationFunction}, paramInitializer={_paramInitializer}, dropout={_dropout})";
+    public override string ToString() 
+        => $"DenseLayer (neurons={_neurons}, activation={_activationFunction}, paramInitializer={_paramInitializer}, dropout={_dropout})";
 }
