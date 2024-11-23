@@ -3,6 +3,7 @@
 // Code It Yourself with .NET, 2024
 
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace MachineLearning.Typed;
@@ -1205,6 +1206,8 @@ public static class ArrayExtensions
                 res[i, j] = expCache[i, j] / sum;
             }
         }
+
+        Debug.Assert(res.Cast<float>().All(x => !float.IsNaN(x)), "There should be no NaN values");
 
         return res;
     }
