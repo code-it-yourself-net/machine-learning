@@ -1190,10 +1190,7 @@ public static class ArrayExtensions
             {
                 expCache[i, j] = MathF.Exp(source[i, j]);
             }
-        }
 
-        for (int i = 0; i < rows; i++)
-        {
             float sum = 0;
             for (int j = 0; j < columns; j++)
             {
@@ -1203,6 +1200,60 @@ public static class ArrayExtensions
             for (int j = 0; j < columns; j++)
             {
                 res[i, j] = expCache[i, j] / sum;
+            }
+        }
+
+        //for (int i = 0; i < rows; i++)
+        //{
+        //    float sum = 0;
+        //    for (int j = 0; j < columns; j++)
+        //    {
+        //        sum += expCache[i, j];
+        //    }
+
+        //    for (int j = 0; j < columns; j++)
+        //    {
+        //        res[i, j] = expCache[i, j] / sum;
+        //    }
+        //}
+
+        Debug.Assert(res.Cast<float>().All(x => !float.IsNaN(x)), "There should be no NaN values");
+
+        return res;
+    }
+
+    // SoftMax function with log-sum-exp trick
+
+    /// <summary>
+    /// Applies the softmax function (with log-sum-exp trick) to the matrix.
+    /// </summary>
+    /// <returns>A new matrix with softmax-applied values.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float[,] SoftmaxLogSumExp(this float[,] source)
+    {
+        int rows = source.GetLength(0);
+        int columns = source.GetLength(1);
+        float[,] res = new float[rows, columns];
+
+        for (int i = 0; i < rows; i++) // rows = batch size (obervations)
+        {
+            float max = source[i, 0];
+            for (int j = 1; j < columns; j++)
+            {
+                max = MathF.Max(max, source[i, j]);
+            }
+
+            float sum = 0;
+            for (int j = 0; j < columns; j++)
+            {
+                sum += MathF.Exp(source[i, j] - max);
+            }
+
+            float logSumExp = max + MathF.Log(sum);
+
+            for (int j = 0; j < columns; j++)
+            {
+                res[i, j] = source[i, j] - logSumExp;
             }
         }
 

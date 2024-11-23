@@ -6,6 +6,8 @@ using MachineLearning.Typed.NeuralNetwork.Operations;
 
 namespace MachineLearning.Tests.Typed.Operations;
 
+// TODO: compare the test results with https://github.com/mashmawy/ConvNetCS/blob/master/ConvNetCS/Network/Layers/ConvLayer.cs and https://github.com/cbovar/ConvNetSharp/blob/master/src/ConvNetSharp.Core/Layers/ConvLayer.cs
+
 [TestClass]
 public class Conv2DTests
 {
