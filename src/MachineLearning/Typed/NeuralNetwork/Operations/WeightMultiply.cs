@@ -27,7 +27,7 @@ public class WeightMultiply(float[,] weights) : ParamOperation2D<float[,]>(weigh
     protected override float[,] CalcParamGradient(float[,] outputGradient)
         => Input.Transpose().MultiplyDot(outputGradient);
 
-    public override void UpdateParams(Layer layer, Optimizer optimizer)
+    public override void UpdateParams(Layer? layer, Optimizer optimizer)
     {
         optimizer.Update(layer, Param, ParamGradient);
     }

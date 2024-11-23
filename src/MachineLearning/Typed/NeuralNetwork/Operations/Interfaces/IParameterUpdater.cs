@@ -9,5 +9,5 @@ namespace MachineLearning.Typed.NeuralNetwork.Operations.Interfaces;
 
 internal interface IParameterUpdater
 {
-    void UpdateParams(Layer layer, Optimizer optimizer);
+    void UpdateParams(Layer? layer, Optimizer optimizer);
 }

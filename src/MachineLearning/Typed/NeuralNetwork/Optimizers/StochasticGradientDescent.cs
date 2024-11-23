@@ -11,7 +11,7 @@ namespace MachineLearning.Typed.NeuralNetwork.Optimizers;
 
 public class StochasticGradientDescent(LearningRate learningRate) : Optimizer(learningRate)
 {
-    public override void Update(Layer layer, float[] param, float[] paramGradient)
+    public override void Update(Layer? layer, float[] param, float[] paramGradient)
     {
         Debug.Assert(param.HasSameShape(paramGradient));
 
@@ -23,7 +23,7 @@ public class StochasticGradientDescent(LearningRate learningRate) : Optimizer(le
         }
     }
 
-    public override void Update(Layer layer, float[,] param, float[,] paramGradient)
+    public override void Update(Layer? layer, float[,] param, float[,] paramGradient)
     {
         Debug.Assert(param.HasSameShape(paramGradient));
 
@@ -38,7 +38,7 @@ public class StochasticGradientDescent(LearningRate learningRate) : Optimizer(le
         }
     }
 
-    public override void Update(Layer layer, float[,,,] param, float[,,,] paramGradient)
+    public override void Update(Layer? layer, float[,,,] param, float[,,,] paramGradient)
     {
         Debug.Assert(param.HasSameShape(paramGradient));
 

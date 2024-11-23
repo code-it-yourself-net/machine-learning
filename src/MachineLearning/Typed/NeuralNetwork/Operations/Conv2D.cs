@@ -11,13 +11,20 @@ using static MachineLearning.Typed.ArrayUtils;
 
 namespace MachineLearning.Typed.NeuralNetwork.Operations;
 
+
 /*
  * Dimensions of the input are: [batch, channels, height, width]
  * Dimensions of the param array are: [channels, filters, kernelSize, kernelSize]
  * Padding is assumed to be the same on all sides = kernelSize / 2
  * TODO: strides, custom padding, dilation
  */
-internal class Conv2D(float[,,,] weights) : ParamOperation4D<float[,,,]>(weights)
+/// <summary>
+/// Dimensions of the input are: [batch, channels, height, width]
+/// Dimensions of the param array are: [channels, filters, kernelSize, kernelSize]
+/// Padding is assumed to be the same on all sides = kernelSize / 2
+/// </summary>
+/// <param name="weights"></param>
+public class Conv2D(float[,,,] weights) : ParamOperation4D<float[,,,]>(weights)
 {
     
     protected override float[,,,] CalcOutput(bool inference)
@@ -173,7 +180,7 @@ internal class Conv2D(float[,,,] weights) : ParamOperation4D<float[,,,]>(weights
         return paramGradient;
     }
 
-    public override void UpdateParams(Layer layer, Optimizer optimizer)
+    public override void UpdateParams(Layer? layer, Optimizer optimizer)
         => optimizer.Update(layer, Param, ParamGradient);
 
     protected override void EnsureSameShapeForParam(float[,,,]? param, float[,,,] paramGradient) 

@@ -12,11 +12,11 @@ namespace MachineLearning.Typed.NeuralNetwork.Optimizers;
 
 public class StochasticGradientDescentMomentum(LearningRate learningRate, float momentum) : Optimizer(learningRate)
 {
-    private Dictionary<float[], float[]> _velocities1D = [];
-    private Dictionary<float[,], float[,]> _velocities2D = [];
-    private Dictionary<float[,,,], float[,,,]> _velocities4D = [];
+    private readonly Dictionary<float[], float[]> _velocities1D = [];
+    private readonly Dictionary<float[,], float[,]> _velocities2D = [];
+    private readonly Dictionary<float[,,,], float[,,,]> _velocities4D = [];
 
-    public override void Update(Layer layer, float[] param, float[] paramGradient)
+    public override void Update(Layer? layer, float[] param, float[] paramGradient)
     {
         Debug.Assert(param.HasSameShape(paramGradient));
 
@@ -31,7 +31,7 @@ public class StochasticGradientDescentMomentum(LearningRate learningRate, float 
         }
     }
 
-    public override void Update(Layer layer, float[,] param, float[,] paramGradient)
+    public override void Update(Layer? layer, float[,] param, float[,] paramGradient)
     {
         Debug.Assert(param.HasSameShape(paramGradient));
 
@@ -51,7 +51,7 @@ public class StochasticGradientDescentMomentum(LearningRate learningRate, float 
         }
     }
 
-    public override void Update(Layer layer, float[,,,] param, float[,,,] paramGradient)
+    public override void Update(Layer? layer, float[,,,] param, float[,,,] paramGradient)
     {
         Debug.Assert(param.HasSameShape(paramGradient));
 
@@ -78,12 +78,12 @@ public class StochasticGradientDescentMomentum(LearningRate learningRate, float 
             }
         }
     }
-    
+
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private float[] GetOrCreateVelocities(float[] param)
     {
-        if(_velocities1D.TryGetValue(param, out float[]? velocities))
+        if (_velocities1D.TryGetValue(param, out float[]? velocities))
         {
             return velocities;
         }
@@ -109,7 +109,7 @@ public class StochasticGradientDescentMomentum(LearningRate learningRate, float 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private float[,] GetOrCreateVelocities(float[,] param)
     {
-        if(_velocities2D.TryGetValue(param, out float[,]? velocities))
+        if (_velocities2D.TryGetValue(param, out float[,]? velocities))
         {
             return velocities;
         }
@@ -136,7 +136,7 @@ public class StochasticGradientDescentMomentum(LearningRate learningRate, float 
         }
     }
 
-    public override string ToString() 
+    public override string ToString()
         => $"StochasticGradientDescentMomentum (learningRate={LearningRate}, momentum={momentum})";
 }
 
