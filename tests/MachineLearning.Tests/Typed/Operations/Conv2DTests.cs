@@ -7,7 +7,7 @@ using MachineLearning.Typed.NeuralNetwork.Operations;
 namespace MachineLearning.Tests.Typed.Operations;
 
 [TestClass]
-public class Conv2DOperationTests
+public class Conv2DTests
 {
     [TestMethod]
 

@@ -14,7 +14,9 @@ public class GlorotInitializer(SeededRandom? random = null) : RandomInitializer(
         return CreateRandomNormal(inputColumns, neurons, Random, 0, stdDev);
     }
 
-    internal override float[] InitBiases(int neurons) => CreateZeros(neurons);
+    internal override float[] InitBiases(int neurons) 
+        => CreateZeros(neurons);
 
-    public override string ToString() => $"GlorotInitializer (seed={Seed})";
+    public override string ToString() 
+        => $"GlorotInitializer (seed={Seed})";
 }

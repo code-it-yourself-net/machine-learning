@@ -4,7 +4,7 @@
 
 namespace MachineLearning.Typed.NeuralNetwork.Operations;
 
-public class Tanh : Operation2D
+public class Tanh2D : Operation2D
 {
     protected override float[,] CalcOutput(bool inference) => Input.Tanh();
 
@@ -22,5 +22,5 @@ public class Tanh : Operation2D
         return outputGradient.MultiplyElementwise(tanhBackward);
     }
 
-    public override string ToString() => "Tanh";
+    public override string ToString() => "Tanh2D";
 }
