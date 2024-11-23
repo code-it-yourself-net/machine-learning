@@ -1289,8 +1289,6 @@ public static class ArrayExtensions
 
     #region Shapes and Values
 
-    #if DEBUG
-
     public static bool HasSameShape(this float[] source, float[] matrix)
         => source.GetLength(0) == matrix.GetLength(0);
 
@@ -1321,7 +1319,5 @@ public static class ArrayExtensions
         return true;
     }
     
-    #endif
-
     #endregion
 }

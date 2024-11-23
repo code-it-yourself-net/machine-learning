@@ -2,6 +2,8 @@
 // File name: MatrixTests.cs
 // Code It Yourself with .NET, 2024
 
+using MachineLearning.Typed;
+
 namespace MachineLearning.Tests;
 
 [TestClass]
@@ -271,9 +273,12 @@ public class MatrixOldTests
     {
         MatrixOld matrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
         Matrix typedMatrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
+        float[,] array = new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } };
         float std1 = matrix.Std();
         float std2 = typedMatrix.Std();
+        float std3 = array.Std();
         Assert.AreEqual(std1, std2);
+        Assert.AreEqual(std1, std3);
     }
 
     [TestMethod]
@@ -281,18 +286,23 @@ public class MatrixOldTests
     {
         MatrixOld matrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
         Matrix typedMatrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
+        float[,] array = new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } };
         MatrixOld matrix1 = matrix.Softmax();
         Matrix matrix2 = typedMatrix.Softmax();
+        float[,] matrix3 = array.Softmax();
         //Assert.AreEqual(matrix1, matrix2);
 
         // assert that the two matrices are equal
         Assert.AreEqual(matrix1.GetDimension(Dimension.Rows), matrix2.GetDimension(Dimension.Rows));
+        Assert.AreEqual(matrix1.GetDimension(Dimension.Rows), matrix3.GetLength((int)Dimension.Rows));
         Assert.AreEqual(matrix1.GetDimension(Dimension.Columns), matrix2.GetDimension(Dimension.Columns));
+        Assert.AreEqual(matrix1.GetDimension(Dimension.Columns), matrix3.GetLength((int)Dimension.Columns));
         for (int i = 0; i < matrix1.GetDimension(Dimension.Rows); i++)
         {
             for (int j = 0; j < matrix1.GetDimension(Dimension.Columns); j++)
             {
                 Assert.AreEqual(matrix1.Array.GetValue(i, j), matrix2.Array.GetValue(i, j));
+                Assert.AreEqual(matrix1.Array.GetValue(i, j), matrix3.GetValue(i, j));
             }
         }
     }
