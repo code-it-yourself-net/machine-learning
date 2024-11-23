@@ -32,10 +32,10 @@ public class Tanh2DTests
         // Arrange
         Tanh2D tanh2D = new();
         float[,] input = new float[,] { { 0, 1 }, { -1, 2 } };
+        _ = tanh2D.Forward(input, true);
         float[,] outputGradient = new float[,] { { 1, 1 }, { 1, 1 } };
 
         // Act
-        _ = tanh2D.Forward(input, true);
         float[,] inputGradient = tanh2D.Backward(outputGradient);
 
         // Assert
