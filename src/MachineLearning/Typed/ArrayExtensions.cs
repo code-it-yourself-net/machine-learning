@@ -3,7 +3,6 @@
 // Code It Yourself with .NET, 2024
 
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace MachineLearning.Typed;
