@@ -92,7 +92,7 @@ public class Conv2DTests
         Assert.AreEqual(3, inputGradient.GetLength(2));
         Assert.AreEqual(3, inputGradient.GetLength(3));
 
-        // The input gradient is obtained by convolving the gradient of the loss with respect to the output (outputGradient) with the transposed (flipped) convolutional kernel (param).
+        // The input gradient is obtained by convolving the gradient of the loss with respect to the output (outputGradient) with the flipped convolutional kernel (param).
         CollectionAssert.AreEqual(new float[,,,] {
             {
                 {
@@ -202,7 +202,7 @@ public class Conv2DTests
         Assert.AreEqual(3, inputGradient.GetLength(2));
         Assert.AreEqual(3, inputGradient.GetLength(3));
 
-        // The input gradient is obtained by convolving the gradient of the loss with respect to the output (outputGradient) with the transposed (flipped, left-to-right and top-to-bottom) convolutional kernel (param).
+        // The input gradient is obtained by convolving the gradient of the loss with respect to the output (outputGradient) with the flipped (left-to-right and top-to-bottom) convolutional kernel (param).
         CollectionAssert.AreEqual(new float[,,,] {
             {
                 {
