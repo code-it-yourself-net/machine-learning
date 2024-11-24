@@ -11,13 +11,8 @@ using static MachineLearning.Typed.ArrayUtils;
 
 namespace MachineLearning.Typed.NeuralNetwork.Operations;
 
+// TODO: strides, custom padding, dilation
 
-/*
- * Dimensions of the input are: [batch, channels, height, width]
- * Dimensions of the param array are: [channels, filters, kernelSize, kernelSize]
- * Padding is assumed to be the same on all sides = kernelSize / 2
- * TODO: strides, custom padding, dilation
- */
 /// <summary>
 /// Dimensions of the input are: [batch, channels, height, width]
 /// Dimensions of the param array are: [channels, filters, kernelSize, kernelSize]
@@ -89,6 +84,8 @@ public class Conv2D(float[,,,] weights) : ParamOperation4D<float[,,,]>(weights)
 
         int outputChannels = outputGradient.GetLength(1);
         int kernelSize = Param.GetLength(2);
+        int outputGradientHeight = outputGradient.GetLength(2);
+        int outputGradientWidth = outputGradient.GetLength(3);
 
         Debug.Assert(Param.GetLength(0) == inputChannels);
         Debug.Assert(kernelSize == Param.GetLength(3));
@@ -114,7 +111,7 @@ public class Conv2D(float[,,,] weights) : ParamOperation4D<float[,,,]>(weights)
                                 {
                                     int oh = ih - kh + padding;
                                     int ow = iw - kw + padding;
-                                    if (oh >= 0 && oh < outputGradient.GetLength(2) && ow >= 0 && ow < outputGradient.GetLength(3))
+                                    if (oh >= 0 && oh < outputGradientHeight && ow >= 0 && ow < outputGradientWidth)
                                     {
                                         sum += outputGradient[b, oc, oh, ow] * Param[ic, oc, kh, kw];
                                     }
@@ -139,6 +136,8 @@ public class Conv2D(float[,,,] weights) : ParamOperation4D<float[,,,]>(weights)
 
         int outputChannels = outputGradient.GetLength(1);
         int kernelSize = Param.GetLength(2);
+        int outputGradientHeight = outputGradient.GetLength(2);
+        int outputGradientWidth = outputGradient.GetLength(3);
 
         Debug.Assert(Param.GetLength(0) == inputChannels);
         Debug.Assert(kernelSize == Param.GetLength(3));
@@ -158,9 +157,9 @@ public class Conv2D(float[,,,] weights) : ParamOperation4D<float[,,,]>(weights)
                         for (int kw = 0; kw < kernelSize; kw++)
                         {
                             float sum = 0.0f;
-                            for (int oh = 0; oh < outputGradient.GetLength(2); oh++)
+                            for (int oh = 0; oh < outputGradientHeight; oh++)
                             {
-                                for (int ow = 0; ow < outputGradient.GetLength(3); ow++)
+                                for (int ow = 0; ow < outputGradientWidth; ow++)
                                 {
                                     int ih = oh + kh - padding;
                                     int iw = ow + kw - padding;
