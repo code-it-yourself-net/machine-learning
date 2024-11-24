@@ -36,8 +36,9 @@ public abstract class Layer<TIn, TOut> : Layer
     /// <returns>Output matrix.</returns>
     public TOut Forward(TIn input, bool inference)
     {
-        // We store the pointer to the input array so we can check the shape of the input gradient in the backward pass..
         bool firstPass = _input is null;
+
+        // We store the pointer to the input array so we can check the shape of the input gradient in the backward pass.
         _input = input;
         if (firstPass)
         {

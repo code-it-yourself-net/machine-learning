@@ -25,6 +25,7 @@ public static class ArrayExtensions
     /// </summary>
     /// <param name="source">The matrix used to determine the dimensions of the new matrix.</param>
     /// <returns>A new matrix filled with ones.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] AsOnes(this float[,] source)
     {
         int rows = source.GetLength(0);
@@ -47,6 +48,7 @@ public static class ArrayExtensions
     /// </summary>
     /// <param name="source">The matrix used to determine the dimensions of the new matrix.</param>
     /// <returns>A new matrix filled with ones.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,,,] AsOnes(this float[,,,] source)
     {
         int dim1 = source.GetLength(0);
@@ -78,6 +80,7 @@ public static class ArrayExtensions
     /// </summary>
     /// <param name="source">The matrix used to determine the dimensions of the new matrix.</param>
     /// <returns>A new matrix filled with ones.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[] AsOnes(this float[] source)
     {
         int length = source.GetLength(0);
@@ -91,6 +94,7 @@ public static class ArrayExtensions
         return res;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] AsZeroOnes(this float[,] source, float onesProbability, Random random)
     {
         int rows = source.GetLength(0);
@@ -110,6 +114,7 @@ public static class ArrayExtensions
         return res;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,,,] AsZeroOnes(this float[,,,] source, float onesProbability, Random random)
     {
         int dim1 = source.GetLength(0);
@@ -146,6 +151,7 @@ public static class ArrayExtensions
     /// </summary>
     /// <param name="column"></param>
     /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] GetColumn(this float[,] source, int column)
     {
         int rows = source.GetLength(0);
@@ -166,6 +172,7 @@ public static class ArrayExtensions
     /// Gets a submatrix containing the specified range of columns from the current matrix. The shape is [rows, range].
     /// </summary>
     /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] GetColumns(this float[,] source, Range range)
     {
         (int offset, int length) = range.GetOffsetAndLength(source.GetLength(1));
@@ -192,6 +199,7 @@ public static class ArrayExtensions
     /// <remarks>
     /// The returned row is a new instance of the <see cref="Matrix"/> class and has the same number of columns as the original matrix.
     /// </remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[] GetRow(this float[,] source, int row)
     {
         int columns = source.GetLength(1);
@@ -207,6 +215,7 @@ public static class ArrayExtensions
         return res;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,,] GetRow(this float[,,,] source, int row)
     {
         int dim2 = source.GetLength(1);
@@ -239,6 +248,7 @@ public static class ArrayExtensions
     /// <remarks>
     /// The returned rows are a new instance of the <see cref="Matrix"/> class and have the same number of columns as the original matrix.
     /// </remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] GetRows(this float[,] source, Range range)
     {
         (int offset, int length) = range.GetOffsetAndLength(source.GetLength(0));
@@ -257,6 +267,7 @@ public static class ArrayExtensions
         return res;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,,,] GetRows(this float[,,,] source, Range range)
     {
         (int offset, int length) = range.GetOffsetAndLength(source.GetLength(0));
@@ -291,6 +302,7 @@ public static class ArrayExtensions
     /// <param name="rowIndex">The index of the row to set.</param>
     /// <param name="row">The matrix containing the values to set.</param>
     /// <exception cref="Exception">Thrown when the number of columns in the specified matrix is not equal to the number of columns in the current matrix.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void SetRow(this float[,] source, int rowIndex, float[] row)
     {
 
@@ -306,6 +318,7 @@ public static class ArrayExtensions
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void SetRow(this float[,,,] source, int rowIndex, float[,,] row)
     {
         Debug.Assert(rowIndex >= 0 && rowIndex < source.GetLength(0), "Row index out of bounds.");
@@ -331,6 +344,7 @@ public static class ArrayExtensions
 
     #region Aggregations
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float Max(this float[,] source)
     {
         float max = float.MinValue;
@@ -348,6 +362,7 @@ public static class ArrayExtensions
         return max;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float Max(this float[,,,] source)
     {
         float max = float.MinValue;
@@ -378,10 +393,17 @@ public static class ArrayExtensions
     /// Calculates the mean of all elements in the matrix.
     /// </summary>
     /// <returns>The mean of all elements in the matrix.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float Mean(this float[,] source) => source.Sum() / source.Length;
 
+    /// <summary>
+    /// Calculates the mean of all elements in the matrix.
+    /// </summary>
+    /// <returns>The mean of all elements in the matrix.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float Mean(this float[,,,] source) => source.Sum() / source.Length;
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float Min(this float[,] source)
     {
         float min = float.MaxValue;
@@ -399,6 +421,7 @@ public static class ArrayExtensions
         return min;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float Min(this float[,,,] source)
     {
         float min = float.MaxValue;
@@ -430,6 +453,7 @@ public static class ArrayExtensions
     /// Calculates the standard deviation.
     /// </summary>
     /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float Std(this float[,] source)
     {
         float mean = source.Mean();
@@ -453,6 +477,7 @@ public static class ArrayExtensions
     /// Calculates the standard deviation.
     /// </summary>
     /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float Std(this float[,,,] source)
     {
         float mean = source.Mean();
@@ -484,6 +509,7 @@ public static class ArrayExtensions
     /// Calculates the sum of all elements in the matrix.
     /// </summary>
     /// <returns>The sum of all elements in the matrix.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float Sum(this float[,] source)
     {
         // Sum over all elements.
@@ -502,6 +528,7 @@ public static class ArrayExtensions
         return sum;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float Sum(this float[,,,] source)
     {
         // Sum over all elements.
@@ -534,6 +561,7 @@ public static class ArrayExtensions
     /// </summary>
     /// <param name="source"></param>
     /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[] SumByRows(this float[,] source)
     {
         int rows = source.GetLength(0);
@@ -554,6 +582,7 @@ public static class ArrayExtensions
         return res;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[] AvgByRows(this float[,] source)
     {
         int rows = source.GetLength(0);
@@ -583,6 +612,7 @@ public static class ArrayExtensions
     /// </summary>
     /// <param name="scalar">The scalar value to add.</param>
     /// <returns>A new matrix with the scalar added to each element.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] Add(this float[,] source, float scalar)
     {
         int rows = source.GetLength(0);
@@ -600,6 +630,7 @@ public static class ArrayExtensions
         return res;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void AddInPlace(this float[,] source, float scalar)
     {
         int rows = source.GetLength(0);
@@ -614,6 +645,7 @@ public static class ArrayExtensions
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void AddInPlace(this float[,,,] source, float scalar)
     {
         int rows = source.GetLength(0);
@@ -637,6 +669,7 @@ public static class ArrayExtensions
 
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void DivideInPlace(this float[,] source, float scalar)
     {
         int rows = source.GetLength(0);
@@ -651,6 +684,7 @@ public static class ArrayExtensions
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void DivideInPlace(this float[,,,] source, float scalar)
     {
         int dim1 = source.GetLength(0);
@@ -679,6 +713,7 @@ public static class ArrayExtensions
     /// </summary>
     /// <param name="scalar">The scalar value to multiply.</param>
     /// <returns>A new matrix with each element multiplied by the scalar value.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] Multiply(this float[,] source, float scalar)
     {
         int rows = source.GetLength(0);
@@ -701,6 +736,7 @@ public static class ArrayExtensions
     /// </summary>
     /// <param name="scalar">The scalar value to multiply.</param>
     /// <returns>A new matrix with each element multiplied by the scalar value.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,,,] Multiply(this float[,,,] source, float scalar)
     {
         int dim1 = source.GetLength(0);
@@ -727,6 +763,7 @@ public static class ArrayExtensions
         return res;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void MultiplyInPlace(this float[,] source, float scalar)
     {
         int rows = source.GetLength(0);
@@ -740,6 +777,7 @@ public static class ArrayExtensions
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] Divide(this float[,] source, float scalar)
     {
         int rows = source.GetLength(0);
@@ -762,6 +800,7 @@ public static class ArrayExtensions
     /// </summary>
     /// <param name="scalar">The power to raise each element to.</param>
     /// <returns>A new matrix with each element raised to the specified power.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] Power(this float[,] source, int scalar)
     {
         int rows = source.GetLength(0);
@@ -789,6 +828,7 @@ public static class ArrayExtensions
     /// <param name="matrix">The matrix to add as a row.</param>
     /// <returns>A new matrix with the row added.</returns>
     /// <exception cref="Exception">Thrown when the number of columns in the specified matrix is not equal to the number of columns in the current matrix, or when the number of rows of the specified matrix is not equal to 1.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] AddRow(this float[,] source, float[] matrix)
     {
 
@@ -819,6 +859,7 @@ public static class ArrayExtensions
     /// </summary>
     /// <param name="min">The minimum value to clip the matrix elements to.</param>
     /// <param name="max">The maximum value to clip the matrix elements to.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ClipInPlace(this float[,] source, float min, float max)
     {
         int rows = source.GetLength(0);
@@ -838,6 +879,7 @@ public static class ArrayExtensions
     /// <param name="matrix">The matrix to multiply with.</param>
     /// <returns>A new matrix that is the result of the dot product multiplication.</returns>
     /// <exception cref="Exception">Thrown when the number of columns in the current matrix is not equal to the number of rows in the specified matrix.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] MultiplyDot(this float[,] source, float[,] matrix)
     {
 
@@ -999,14 +1041,13 @@ public static class ArrayExtensions
         return res;
     }
 
-    
-
     /// <summary>
     /// Subtracts the elements of the specified matrix from the current matrix.
     /// </summary>
     /// <param name="matrix">The matrix to subtract.</param>
     /// <returns>A new matrix with the elements subtracted.</returns>
     /// <exception cref="Exception">Thrown when the number of rows in the specified matrix is not equal to the number of rows in the current matrix, or when the number of columns in the specified matrix is not equal to the number of columns in the current matrix.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] Subtract(this float[,] source, float[,] matrix)
     {
 #if DEBUG
@@ -1032,6 +1073,7 @@ public static class ArrayExtensions
         return res;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,,,] Subtract(this float[,,,] source, float[,,,] matrix)
     {
         int dim1 = source.GetLength(0);
@@ -1062,6 +1104,7 @@ public static class ArrayExtensions
 
     #region Matrix operations and functions
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int[] Argmax(this float[,] source)
     {
         int rows = source.GetLength(0);
@@ -1088,6 +1131,7 @@ public static class ArrayExtensions
         return array;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] Log(this float[,] source)
     {
         int rows = source.GetLength(0);
@@ -1109,6 +1153,7 @@ public static class ArrayExtensions
     /// Applies the sigmoid function to each element of the matrix.
     /// </summary>
     /// <returns>A new matrix with each element transformed by the sigmoid function with the same dimensions as the original matrix.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] Sigmoid(this float[,] source)
     {
         int rows = source.GetLength(0);
@@ -1131,6 +1176,7 @@ public static class ArrayExtensions
     /// </summary>
     /// <returns>A new matrix with softmax-applied values.</returns>
     /// <remarks>Softmax formula: <c>exp(x) / sum(exp(x))</c>.</remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] Softmax(this float[,] source)
     {
         int rows = source.GetLength(0);
@@ -1144,10 +1190,7 @@ public static class ArrayExtensions
             {
                 expCache[i, j] = MathF.Exp(source[i, j]);
             }
-        }
 
-        for (int i = 0; i < rows; i++)
-        {
             float sum = 0;
             for (int j = 0; j < columns; j++)
             {
@@ -1160,6 +1203,62 @@ public static class ArrayExtensions
             }
         }
 
+        //for (int i = 0; i < rows; i++)
+        //{
+        //    float sum = 0;
+        //    for (int j = 0; j < columns; j++)
+        //    {
+        //        sum += expCache[i, j];
+        //    }
+
+        //    for (int j = 0; j < columns; j++)
+        //    {
+        //        res[i, j] = expCache[i, j] / sum;
+        //    }
+        //}
+
+        Debug.Assert(res.Cast<float>().All(x => !float.IsNaN(x)), "There should be no NaN values");
+
+        return res;
+    }
+
+    // SoftMax function with log-sum-exp trick
+
+    /// <summary>
+    /// Applies the softmax function (with log-sum-exp trick) to the matrix.
+    /// </summary>
+    /// <returns>A new matrix with softmax-applied values.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float[,] SoftmaxLogSumExp(this float[,] source)
+    {
+        int rows = source.GetLength(0);
+        int columns = source.GetLength(1);
+        float[,] res = new float[rows, columns];
+
+        for (int i = 0; i < rows; i++) // rows = batch size (obervations)
+        {
+            float max = source[i, 0];
+            for (int j = 1; j < columns; j++)
+            {
+                max = MathF.Max(max, source[i, j]);
+            }
+
+            float sum = 0;
+            for (int j = 0; j < columns; j++)
+            {
+                sum += MathF.Exp(source[i, j] - max);
+            }
+
+            float logSumExp = max + MathF.Log(sum);
+
+            for (int j = 0; j < columns; j++)
+            {
+                res[i, j] = source[i, j] - logSumExp;
+            }
+        }
+
+        Debug.Assert(res.Cast<float>().All(x => !float.IsNaN(x)), "There should be no NaN values");
+
         return res;
     }
 
@@ -1167,6 +1266,7 @@ public static class ArrayExtensions
     /// Applies the hyperbolic tangent function element-wise to the matrix.
     /// </summary>
     /// <returns>A new matrix with the hyperbolic tangent applied element-wise.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] Tanh(this float[,] source)
     {
         int rows = source.GetLength(0);
@@ -1188,6 +1288,7 @@ public static class ArrayExtensions
     /// Applies the hyperbolic tangent function element-wise to the matrix.
     /// </summary>
     /// <returns>A new matrix with the hyperbolic tangent applied element-wise.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,,,] Tanh(this float[,,,] source)
     {
         int dim1 = source.GetLength(0);
@@ -1218,6 +1319,7 @@ public static class ArrayExtensions
     /// Transposes the matrix by swapping its rows and columns.
     /// </summary>
     /// <returns>A new <see cref="float[,]"/> object representing the transposed matrix.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float[,] Transpose(this float[,] source)
     {
         int rows = source.GetLength(0);
@@ -1269,6 +1371,6 @@ public static class ArrayExtensions
 
         return true;
     }
-
+    
     #endregion
 }

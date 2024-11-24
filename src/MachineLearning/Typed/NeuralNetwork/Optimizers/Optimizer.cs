@@ -24,9 +24,9 @@ public abstract class Optimizer(LearningRate learningRate)
 
     // TODO:: I'll be working to deduplicate these Update procedures somehow
 
-    public abstract void Update(Layer layer, float[] param, float[] paramGradient);
+    public abstract void Update(Layer? layer, float[] param, float[] paramGradient);
 
-    public abstract void Update(Layer layer, float[,] param, float[,] paramGradient);
+    public abstract void Update(Layer? layer, float[,] param, float[,] paramGradient);
 
-    public abstract void Update(Layer layer, float[,,,] param, float[,,,] paramGradient);
+    public abstract void Update(Layer? layer, float[,,,] param, float[,,,] paramGradient);
 }

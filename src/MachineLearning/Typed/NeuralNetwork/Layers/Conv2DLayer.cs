@@ -49,4 +49,7 @@ public class Conv2DLayer : Layer<float[,,,], float[,,,]>
 
     protected override void EnsureSameShapeForOutput(float[,,,]? output, float[,,,]? outputGradient)
         => EnsureSameShape(output, outputGradient);
+
+    public override string ToString()
+        => $"Conv2DLayer (filters={_filters}, kernelSize={_kernelSize}, activation={_activationFunction}, paramInitializer={_paramInitializer}, dropout={_dropout})";
 }

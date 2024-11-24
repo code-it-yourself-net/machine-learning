@@ -30,7 +30,7 @@ public class BiasAdd(float[] bias) : ParamOperation2D<float[]>(bias)
         => Input.AsOnes().MultiplyElementwise(outputGradient);
     //  => outputGradient ?
 
-    public override void UpdateParams(Layer layer, Optimizer optimizer)
+    public override void UpdateParams(Layer? layer, Optimizer optimizer)
     {
         optimizer.Update(layer, Param, ParamGradient);
     }

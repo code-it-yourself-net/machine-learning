@@ -6,8 +6,13 @@ using MachineLearning.Typed.NeuralNetwork.Operations;
 
 namespace MachineLearning.Tests.Typed.Operations;
 
+// TODO: compare the test results with
+// https://github.com/mashmawy/ConvNetCS/blob/master/ConvNetCS/Network/Layers/ConvLayer.cs
+// https://github.com/cbovar/ConvNetSharp/blob/master/src/ConvNetSharp.Core/Layers/ConvLayer.cs
+// https://github.com/romanoza/NeuroSharp/blob/main/NeuroSharp/Layers/ConvolutionalLayer.cs
+
 [TestClass]
-public class Conv2DOperationTests
+public class Conv2DTests
 {
     [TestMethod]
 
@@ -87,7 +92,7 @@ public class Conv2DOperationTests
         Assert.AreEqual(3, inputGradient.GetLength(2));
         Assert.AreEqual(3, inputGradient.GetLength(3));
 
-        // The input gradient is obtained by convolving the gradient of the loss with respect to the output (outputGradient) with the transposed (flipped) convolutional kernel (param).
+        // The input gradient is obtained by convolving the gradient of the loss with respect to the output (outputGradient) with the flipped convolutional kernel (param).
         CollectionAssert.AreEqual(new float[,,,] {
             {
                 {
@@ -197,7 +202,7 @@ public class Conv2DOperationTests
         Assert.AreEqual(3, inputGradient.GetLength(2));
         Assert.AreEqual(3, inputGradient.GetLength(3));
 
-        // The input gradient is obtained by convolving the gradient of the loss with respect to the output (outputGradient) with the transposed (flipped, left-to-right and top-to-bottom) convolutional kernel (param).
+        // The input gradient is obtained by convolving the gradient of the loss with respect to the output (outputGradient) with the flipped (left-to-right and top-to-bottom) convolutional kernel (param).
         CollectionAssert.AreEqual(new float[,,,] {
             {
                 {

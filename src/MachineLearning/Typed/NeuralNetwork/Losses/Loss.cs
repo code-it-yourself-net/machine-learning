@@ -19,7 +19,8 @@ public abstract class Loss<TPrediction>
     private TPrediction? _prediction;
     private TPrediction? _target;
 
-    protected internal TPrediction Prediction => _prediction ?? throw new NotYetCalculatedException();
+    public TPrediction Prediction => _prediction ?? throw new NotYetCalculatedException();
+
     protected internal TPrediction Target => _target ?? throw new NotYetCalculatedException();
 
     /// <summary>

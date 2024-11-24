@@ -17,7 +17,7 @@ namespace MachineLearning.Typed.NeuralNetwork.Operations;
 public abstract class ParamOperation2D : Operation2D, IParameterCountProvider, IParameterUpdater
 {
     public abstract int GetParamCount();
-    public abstract void UpdateParams(Layer layer, Optimizer optimizer);
+    public abstract void UpdateParams(Layer? layer, Optimizer optimizer);
 }
 
 /// <summary>
