@@ -139,6 +139,10 @@ public abstract class Trainer<TInputData, TPrediction>(
             }
             stepWatch.Stop();
 
+            // Write a line with 80 spaces to clean the line with the step info.
+            if (allSteps > 1 && consoleOutputMode > ConsoleOutputMode.Disable)
+                Write(new string(' ', 80) + "\r");
+
             if (trainLoss is not null && logEpoch)
             {
                 if (consoleOutputMode > ConsoleOutputMode.Disable)
