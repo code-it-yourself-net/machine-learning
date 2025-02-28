@@ -43,4 +43,57 @@ public class NeuralNetworkTests
         Assert.AreEqual(neuralNetwork.HasCheckpoint(), clonedNeuralNetwork.HasCheckpoint());
         Assert.AreEqual(neuralNetwork.ParameterCount, clonedNeuralNetwork.ParameterCount);
     }
+
+    [TestMethod]
+    public void RnnLayerForwardBackwardTest()
+    {
+        // Arrange
+        int inputSize = 5;
+        int hiddenSize = 5;
+        int batchSize = 3;
+        int timeSteps = 4;
+
+        Matrix input = Matrix.Random(batchSize, inputSize);
+        Matrix outputGradient = Matrix.Random(batchSize, hiddenSize);
+
+        RnnLayer rnnLayer = new();
+
+        // Act
+        Matrix output = rnnLayer.Forward(input, false);
+        Matrix inputGradient = rnnLayer.Backward(outputGradient);
+
+        // Assert
+        Assert.AreEqual(output.GetDimension(Dimension.Rows), batchSize);
+        Assert.AreEqual(output.GetDimension(Dimension.Columns), hiddenSize);
+        Assert.AreEqual(inputGradient.GetDimension(Dimension.Rows), batchSize);
+        Assert.AreEqual(inputGradient.GetDimension(Dimension.Columns), inputSize);
+    }
+
+    [TestMethod]
+    public void RnnOperationForwardBackwardTest()
+    {
+        // Arrange
+        int inputSize = 5;
+        int hiddenSize = 5;
+        int batchSize = 3;
+
+        Matrix input = Matrix.Random(batchSize, inputSize);
+        Matrix outputGradient = Matrix.Random(batchSize, hiddenSize);
+
+        Matrix inputWeights = Matrix.Random(inputSize, hiddenSize);
+        Matrix hiddenWeights = Matrix.Random(hiddenSize, hiddenSize);
+        Matrix bias = Matrix.Zeros(1, hiddenSize);
+
+        RnnOperation rnnOperation = new(inputWeights, hiddenWeights, bias);
+
+        // Act
+        Matrix output = rnnOperation.Forward(input, false);
+        Matrix inputGradient = rnnOperation.Backward(outputGradient);
+
+        // Assert
+        Assert.AreEqual(output.GetDimension(Dimension.Rows), batchSize);
+        Assert.AreEqual(output.GetDimension(Dimension.Columns), hiddenSize);
+        Assert.AreEqual(inputGradient.GetDimension(Dimension.Rows), batchSize);
+        Assert.AreEqual(inputGradient.GetDimension(Dimension.Columns), inputSize);
+    }
 }
