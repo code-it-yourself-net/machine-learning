@@ -27,15 +27,14 @@ namespace MnistTests;
 class MnistNeuralNetwork(SeededRandom? random) 
     : NeuralNetwork<float[,], float[,]>(new SoftmaxCrossEntropyLoss(), random)
 {
-    protected override LayerBuilder<float[,]> OnAddLayers(LayerBuilder<float[,]> builder)
+    protected override LayerBuilder<float[,], float[,]> CreateLayerBuilder()
     {
         // RangeInitializer initializer = new(-1f, 1f);
         GlorotInitializer initializer = new(Random);
         Dropout2D? dropout1 = new(0.85f, Random);
         Dropout2D? dropout2 = new(0.85f, Random);
 
-        return builder
-            .AddLayer(new DenseLayer(178, new Tanh2D(), initializer, dropout1))
+        return AddLayer(new DenseLayer(178, new Tanh2D(), initializer, dropout1))
             .AddLayer(new DenseLayer(46, new Tanh2D(), initializer, dropout2))
             .AddLayer(new DenseLayer(10, new Linear(), initializer));
     }

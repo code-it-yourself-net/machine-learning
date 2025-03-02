@@ -6,49 +6,39 @@ using MachineLearning.Typed.NeuralNetwork.Layers;
 
 namespace MachineLearning.Typed.NeuralNetwork;
 
-public class LayerBuilder
+public abstract class LayerBuilder(LayerBuilder? parent)
 {
-    private readonly LayerBuilder? _parent;
+    public LayerBuilder? Parent => parent;
 
-    public LayerBuilder(LayerBuilder? parent)
-    {
-        _parent = parent;
-    }
-
-    public LayerBuilder? Parent => _parent;
-
-    public Layer? Layer { get; protected set; }
+    public Layer Layer { get; protected set; } = null!;
 }
 
-public class LayerBuilder<TIn> : LayerBuilder
+public class LayerBuilder<TIn, TOut> : LayerBuilder
     where TIn : notnull
+    where TOut : notnull
 {
-    public LayerBuilder(LayerBuilder? parent) : base(parent)
-    {
-    }
-
-    public LayerBuilder<TOut> AddLayer<TOut>(Layer<TIn, TOut> layer)
-        where TOut : notnull
+    public LayerBuilder(Layer<TIn, TOut> layer, LayerBuilder? parent = null) : base(parent)
     {
         Layer = layer;
-        return new LayerBuilder<TOut>(this);
     }
 
-    public LayerList<TInputData, TIn> AsLayerList<TInputData>()
+    public LayerBuilder<TOut, TLayerOut> AddLayer<TLayerOut>(Layer<TOut, TLayerOut> layer)
+        where TLayerOut : notnull
+        => new(layer, this);
+
+    public LayerList<TInputData, TOut> Build<TInputData>()
         where TInputData : notnull
     {
         // Traverse the builder tree to get all layers in the reverse order
-        LayerList<TInputData, TIn> layers = [];
+        LayerList<TInputData, TOut> layers = [];
 
         LayerBuilder? builder = this;
         while (builder != null)
         {
-            if (builder.Layer != null)
-            {
-                layers.Insert(0, builder.Layer);
-            }
+            layers.Insert(0, builder.Layer);
             builder = builder.Parent;
         }
+
         return layers;
     }
 }

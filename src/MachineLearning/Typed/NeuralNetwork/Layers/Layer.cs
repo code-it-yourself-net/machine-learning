@@ -44,7 +44,7 @@ public abstract class Layer<TIn, TOut> : Layer
         if (firstPass)
         {
             // First pass, set up the layer.
-            SetupLayer(input);
+            SetupLayer();
         }
 
         Debug.Assert(_operations != null, "Operations were not set up.");
@@ -86,20 +86,17 @@ public abstract class Layer<TIn, TOut> : Layer
         _operations.UpdateParams(this, optimizer);
     }
 
-    public abstract OperationListBuilder<TIn, TOut> CreateOperationsBuilder();
+    public abstract OperationListBuilder<TIn, TOut> CreateOperationList();
 
-    protected virtual void SetupLayer(TIn input)
+    protected virtual void SetupLayer()
     {
         // Build the operations list.
-        _operations = CreateOperationsBuilder().Build<TIn>();
+        _operations = CreateOperationList().Build();
     }
 
     protected static OperationListBuilder<TIn, TOpOut> AddOperation<TOpOut>(Operation<TIn, TOpOut> operation)
         where TOpOut : notnull
-    {
-        OperationListBuilder<TIn, TOpOut> builder = new(operation);
-        return builder;
-    }
+        => new(operation);
 
     public override Type GetOutputType() => typeof(TOut);
 

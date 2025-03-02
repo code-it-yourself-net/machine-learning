@@ -1,5 +1,5 @@
 ﻿// Machine Learning Utils
-// File name: OperationBuilder.cs
+// File name: OperationListBuilder.cs
 // Code It Yourself with .NET, 2024
 
 using MachineLearning.Typed.NeuralNetwork.Operations;
@@ -10,41 +10,35 @@ namespace MachineLearning.Typed.NeuralNetwork.Layers;
  *  OperationBuilder and OperationBuilder<TIn, TOut> are in the Layers namespace, because they are used to build layers.
  */
 
-public abstract class OperationListBuilder
+public abstract class OperationListBuilder(OperationListBuilder? parent)
 {
-    private readonly OperationListBuilder? _parent;
-
-    public OperationListBuilder(OperationListBuilder? parent)
-    {
-        _parent = parent;
-    }
-
-    public OperationListBuilder? Parent => _parent;
+    public OperationListBuilder? Parent => parent;
 
     public Operation Operation { get; protected set; } = null!;
 }
 
-public class OperationListBuilder<TIn, TOut> : OperationListBuilder
-    where TIn : notnull
-    where TOut : notnull
+public class OperationListBuilder<TLayerIn, TLastOut> : OperationListBuilder
+    where TLayerIn : notnull
+    where TLastOut : notnull
 {
-    public OperationListBuilder(Operation<TIn, TOut> operation, OperationListBuilder? parent = null) : base(parent)
+    internal OperationListBuilder(Operation<TLayerIn, TLastOut> operation): base(null)
     {
         Operation = operation;
     }
 
-    public OperationListBuilder<TOut, TOpOut> AddOperation<TOpOut>(Operation<TOut, TOpOut> operation)
-        where TOpOut : notnull
+    private OperationListBuilder(Operation operation, OperationListBuilder parent) : base(parent)
     {
-        OperationListBuilder<TOut, TOpOut> builder = new(operation, this);
-        return builder;
+        Operation = operation;
     }
 
-    public OperationList<TLayerIn, TOut> Build<TLayerIn>()
-        where TLayerIn : notnull
+    public OperationListBuilder<TLayerIn, TOperationOut> AddOperation<TOperationOut>(Operation<TLastOut, TOperationOut> operation)
+        where TOperationOut : notnull
+        => new OperationListBuilder<TLayerIn, TOperationOut>(operation, this);
+
+    public OperationList<TLayerIn, TLastOut> Build()
     {
         // Traverse the builder chain backwards to get all the operations in the reverse order
-        OperationList<TLayerIn, TOut> operations = [];
+        OperationList<TLayerIn, TLastOut> operations = [];
 
         OperationListBuilder? builder = this;
         while (builder != null)
