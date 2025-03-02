@@ -21,19 +21,8 @@ public abstract class OperationListBuilder
 
     public OperationListBuilder? Parent => _parent;
 
-    public Operation Operation { get; protected set; }
+    public Operation Operation { get; protected set; } = null!;
 }
-
-//public class ForInput<TLayerIn>
-//    where TLayerIn : notnull
-//{
-//    public OperationListBuilder<TLayerIn, TOpOut> AddOperation<TOpOut>(Operation<TLayerIn, TOpOut> operation)
-//        where TOpOut : notnull
-//    {
-//        OperationListBuilder<TLayerIn, TOpOut> builder = new(operation);
-//        return builder;
-//    }
-//}
 
 public class OperationListBuilder<TIn, TOut> : OperationListBuilder
     where TIn : notnull
