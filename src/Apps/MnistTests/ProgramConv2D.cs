@@ -27,14 +27,13 @@ namespace MnistTests;
 internal class MnistConvNeuralNetwork(SeededRandom? random)
     : NeuralNetwork<float[,,,], float[,]>(new SoftmaxCrossEntropyLoss(), random)
 {
-    protected override LayerBuilder<float[,]> OnAddLayers(LayerBuilder<float[,,,]> builder)
+    protected override LayerListBuilder<float[,,,], float[,]> CreateLayerListBuilder()
     {
         ParamInitializer initializer = new GlorotInitializer(Random);
         // ParamInitializer initializer = new RangeInitializer(1, 1);
         Dropout4D? dropout = new(0.85f, Random);
 
-        return builder
-            .AddLayer(new Conv2DLayer(
+        return AddLayer(new Conv2DLayer(
                 filters: 32, // 16,
                 kernelSize: 3,
                 activationFunction: new Tanh4D(),

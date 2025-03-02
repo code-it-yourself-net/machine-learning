@@ -30,12 +30,12 @@ public class Conv2DLayer : Layer<float[,,,], float[,,,]>
         _dropout = dropout;
     }
 
-    public override OperationBuilder<float[,,,]> OnAddOperations(OperationBuilder<float[,,,]> builder)
+    public override OperationListBuilder<float[,,,], float[,,,]> CreateOperationListBuilder()
     {
         float[,,,] weights = _paramInitializer.InitWeights(Input!.GetLength(1 /* channels */), _filters, _kernelSize);
 
-        OperationBuilder<float[,,,]> res = builder
-            .AddOperation(new Conv2D(weights))
+        OperationListBuilder<float[,,,], float[,,,]> res = 
+            AddOperation(new Conv2D(weights))
             .AddOperation(_activationFunction);
 
         if (_dropout != null)
