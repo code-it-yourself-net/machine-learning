@@ -7,10 +7,10 @@ using MachineLearning.Typed.NeuralNetwork.Operations;
 namespace MachineLearning.Typed.NeuralNetwork.Layers;
 
 /*
- *  OperationBuilder and OperationBuilder<TIn> are in the Layers namespace, because they are used to build layers.
+ *  OperationBuilder and OperationBuilder<TIn, TOut> are in the Layers namespace, because they are used to build layers.
  */
 
-public class OperationListBuilder
+public abstract class OperationListBuilder
 {
     private readonly OperationListBuilder? _parent;
 
@@ -21,38 +21,49 @@ public class OperationListBuilder
 
     public OperationListBuilder? Parent => _parent;
 
-    public Operation? Operation { get; protected set; }
+    public Operation Operation { get; protected set; }
 }
 
-public class OperationListBuilder<TIn> : OperationListBuilder
-    where TIn : notnull
-{
-    public OperationListBuilder(OperationListBuilder? parent) : base(parent)
-    {
-    }
+//public class ForInput<TLayerIn>
+//    where TLayerIn : notnull
+//{
+//    public OperationListBuilder<TLayerIn, TOpOut> AddOperation<TOpOut>(Operation<TLayerIn, TOpOut> operation)
+//        where TOpOut : notnull
+//    {
+//        OperationListBuilder<TLayerIn, TOpOut> builder = new(operation);
+//        return builder;
+//    }
+//}
 
-    public OperationListBuilder<TOut> AddOperation<TOut>(Operation<TIn, TOut> operation)
-        where TOut : notnull
+public class OperationListBuilder<TIn, TOut> : OperationListBuilder
+    where TIn : notnull
+    where TOut : notnull
+{
+    public OperationListBuilder(Operation<TIn, TOut> operation, OperationListBuilder? parent = null) : base(parent)
     {
         Operation = operation;
-        return new OperationListBuilder<TOut>(this);
     }
 
-    public OperationList<TInputData, TIn> Build<TInputData>()
-        where TInputData : notnull
+    public OperationListBuilder<TOut, TOpOut> AddOperation<TOpOut>(Operation<TOut, TOpOut> operation)
+        where TOpOut : notnull
     {
-        // Traverse the builder tree to get all the operations in the reverse order
-        OperationList<TInputData, TIn> operations = [];
+        OperationListBuilder<TOut, TOpOut> builder = new(operation, this);
+        return builder;
+    }
+
+    public OperationList<TLayerIn, TOut> Build<TLayerIn>()
+        where TLayerIn : notnull
+    {
+        // Traverse the builder chain backwards to get all the operations in the reverse order
+        OperationList<TLayerIn, TOut> operations = [];
 
         OperationListBuilder? builder = this;
         while (builder != null)
         {
-            if (builder.Operation != null)
-            {
-                operations.Insert(0, builder.Operation);
-            }
+            operations.Insert(0, builder.Operation);
             builder = builder.Parent;
         }
+
         return operations;
     }
 }

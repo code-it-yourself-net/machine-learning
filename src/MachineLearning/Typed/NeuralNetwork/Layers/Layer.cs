@@ -4,6 +4,7 @@
 
 using System.Diagnostics;
 
+using MachineLearning.Typed.NeuralNetwork.Operations;
 using MachineLearning.Typed.NeuralNetwork.Optimizers;
 
 namespace MachineLearning.Typed.NeuralNetwork.Layers;
@@ -85,13 +86,19 @@ public abstract class Layer<TIn, TOut> : Layer
         _operations.UpdateParams(this, optimizer);
     }
 
-    public abstract OperationListBuilder<TOut> OnAddOperations(OperationListBuilder<TIn> builder);
+    public abstract OperationListBuilder<TIn, TOut> CreateOperationsBuilder();
 
     protected virtual void SetupLayer(TIn input)
     {
-        _operations =
-            OnAddOperations(new OperationListBuilder<TIn>(null))
-                .Build<TIn>();
+        // Build the operations list.
+        _operations = CreateOperationsBuilder().Build<TIn>();
+    }
+
+    protected static OperationListBuilder<TIn, TOpOut> AddOperation<TOpOut>(Operation<TIn, TOpOut> operation)
+        where TOpOut : notnull
+    {
+        OperationListBuilder<TIn, TOpOut> builder = new(operation);
+        return builder;
     }
 
     public override Type GetOutputType() => typeof(TOut);
