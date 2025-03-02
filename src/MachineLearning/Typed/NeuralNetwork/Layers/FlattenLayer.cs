@@ -10,7 +10,7 @@ namespace MachineLearning.Typed.NeuralNetwork.Layers;
 
 public class FlattenLayer : Layer<float[,,,], float[,]>
 {
-    public override OperationListBuilder<float[,,,], float[,]> CreateOperationList() 
+    public override OperationListBuilder<float[,,,], float[,]> CreateOperationListBuilder() 
         => AddOperation(new Flatten());
 
     protected override void EnsureSameShapeForInput(float[,,,]? input, float[,,,]? inputGradient)

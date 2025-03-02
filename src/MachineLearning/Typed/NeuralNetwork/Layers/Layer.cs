@@ -86,12 +86,12 @@ public abstract class Layer<TIn, TOut> : Layer
         _operations.UpdateParams(this, optimizer);
     }
 
-    public abstract OperationListBuilder<TIn, TOut> CreateOperationList();
+    public abstract OperationListBuilder<TIn, TOut> CreateOperationListBuilder();
 
     protected virtual void SetupLayer()
     {
         // Build the operations list.
-        _operations = CreateOperationList().Build();
+        _operations = CreateOperationListBuilder().Build();
     }
 
     protected static OperationListBuilder<TIn, TOpOut> AddOperation<TOpOut>(Operation<TIn, TOpOut> operation)

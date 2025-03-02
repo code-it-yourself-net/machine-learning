@@ -26,7 +26,7 @@ public class DenseLayer : Layer<float[,], float[,]>
         _dropout = dropout;
     }
 
-    public override OperationListBuilder<float[,], float[,]> CreateOperationList()
+    public override OperationListBuilder<float[,], float[,]> CreateOperationListBuilder()
     {
         Debug.Assert(Input != null, "Input must not be null here.");
 

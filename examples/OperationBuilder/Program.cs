@@ -26,7 +26,7 @@ class StringToStringOperation : Operation<string, string>
 
 class IntToStringLayer : Layer<int, string>
 {
-    public override OperationListBuilder<int, string> CreateOperationList()
+    public override OperationListBuilder<int, string> CreateOperationListBuilder()
     {
         return AddOperation(new IntToStringOperation())
             .AddOperation(new StringToStringOperation());
@@ -38,7 +38,7 @@ class IntToStringLayer : Layer<int, string>
 
 class StringToStringLayer : Layer<string, string>
 {
-    public override OperationListBuilder<string, string> CreateOperationList()
+    public override OperationListBuilder<string, string> CreateOperationListBuilder()
     {
         return AddOperation(new StringToStringOperation());
     }
@@ -54,7 +54,7 @@ class IntToStringNeuralNetword : NeuralNetwork<int, string>
     {
     }
 
-    protected override LayerBuilder<int, string> CreateLayerBuilder()
+    protected override LayerListBuilder<int, string> CreateLayerListBuilder()
     {
         return AddLayer(new IntToStringLayer())
             .AddLayer(new StringToStringLayer());

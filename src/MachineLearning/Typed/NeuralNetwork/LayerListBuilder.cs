@@ -6,33 +6,37 @@ using MachineLearning.Typed.NeuralNetwork.Layers;
 
 namespace MachineLearning.Typed.NeuralNetwork;
 
-public abstract class LayerBuilder(LayerBuilder? parent)
+public abstract class LayerListBuilder(LayerListBuilder? parent = null)
 {
-    public LayerBuilder? Parent => parent;
+    public LayerListBuilder? Parent => parent;
 
     public Layer Layer { get; protected set; } = null!;
 }
 
-public class LayerBuilder<TIn, TOut> : LayerBuilder
+public class LayerListBuilder<TIn, TOut> : LayerListBuilder
     where TIn : notnull
     where TOut : notnull
 {
-    public LayerBuilder(Layer<TIn, TOut> layer, LayerBuilder? parent = null) : base(parent)
+    internal LayerListBuilder(Layer<TIn, TOut> layer) : base()
     {
         Layer = layer;
     }
 
-    public LayerBuilder<TOut, TLayerOut> AddLayer<TLayerOut>(Layer<TOut, TLayerOut> layer)
-        where TLayerOut : notnull
+    private LayerListBuilder(Layer layer, LayerListBuilder parent) : base(parent)
+    {
+        Layer = layer;
+    }
+
+    public LayerListBuilder<TIn, TNextOut> AddLayer<TNextOut>(Layer<TOut, TNextOut> layer)
+        where TNextOut : notnull
         => new(layer, this);
 
-    public LayerList<TInputData, TOut> Build<TInputData>()
-        where TInputData : notnull
+    public LayerList<TIn, TOut> Build()
     {
         // Traverse the builder tree to get all layers in the reverse order
-        LayerList<TInputData, TOut> layers = [];
+        LayerList<TIn, TOut> layers = [];
 
-        LayerBuilder? builder = this;
+        LayerListBuilder? builder = this;
         while (builder != null)
         {
             layers.Insert(0, builder.Layer);

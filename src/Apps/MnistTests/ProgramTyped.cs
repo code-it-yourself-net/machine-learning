@@ -27,7 +27,7 @@ namespace MnistTests;
 class MnistNeuralNetwork(SeededRandom? random) 
     : NeuralNetwork<float[,], float[,]>(new SoftmaxCrossEntropyLoss(), random)
 {
-    protected override LayerBuilder<float[,], float[,]> CreateLayerBuilder()
+    protected override LayerListBuilder<float[,], float[,]> CreateLayerListBuilder()
     {
         // RangeInitializer initializer = new(-1f, 1f);
         GlorotInitializer initializer = new(Random);

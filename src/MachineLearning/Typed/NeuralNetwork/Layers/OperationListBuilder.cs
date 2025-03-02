@@ -10,7 +10,7 @@ namespace MachineLearning.Typed.NeuralNetwork.Layers;
  *  OperationBuilder and OperationBuilder<TIn, TOut> are in the Layers namespace, because they are used to build layers.
  */
 
-public abstract class OperationListBuilder(OperationListBuilder? parent)
+public abstract class OperationListBuilder(OperationListBuilder? parent = null)
 {
     public OperationListBuilder? Parent => parent;
 
@@ -21,7 +21,7 @@ public class OperationListBuilder<TIn, TOut> : OperationListBuilder
     where TIn : notnull
     where TOut : notnull
 {
-    internal OperationListBuilder(Operation<TIn, TOut> operation): base(null)
+    internal OperationListBuilder(Operation<TIn, TOut> operation): base()
     {
         Operation = operation;
     }

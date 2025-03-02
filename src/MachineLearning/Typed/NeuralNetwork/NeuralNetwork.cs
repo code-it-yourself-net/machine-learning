@@ -25,7 +25,7 @@ public abstract class NeuralNetwork<TInputData, TPrediction>: NeuralNetwork
     {
         _lossFunction = lossFunction;
         Random = random;
-        _layers = CreateLayerBuilder().Build<TInputData>();
+        _layers = CreateLayerListBuilder().Build();
     }
 
     public IReadOnlyList<Layer> Layers => _layers;
@@ -34,9 +34,9 @@ public abstract class NeuralNetwork<TInputData, TPrediction>: NeuralNetwork
 
     protected SeededRandom? Random { get; }
 
-    protected abstract LayerBuilder<TInputData, TPrediction> CreateLayerBuilder();
+    protected abstract LayerListBuilder<TInputData, TPrediction> CreateLayerListBuilder();
 
-    protected static LayerBuilder<TInputData, TLayerOut> AddLayer<TLayerOut>(Layer<TInputData, TLayerOut> layer)
+    protected static LayerListBuilder<TInputData, TLayerOut> AddLayer<TLayerOut>(Layer<TInputData, TLayerOut> layer)
         where TLayerOut : notnull
         => new(layer);
 
