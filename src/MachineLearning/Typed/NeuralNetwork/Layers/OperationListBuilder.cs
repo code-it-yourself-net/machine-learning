@@ -17,11 +17,11 @@ public abstract class OperationListBuilder(OperationListBuilder? parent)
     public Operation Operation { get; protected set; } = null!;
 }
 
-public class OperationListBuilder<TLayerIn, TLastOut> : OperationListBuilder
-    where TLayerIn : notnull
-    where TLastOut : notnull
+public class OperationListBuilder<TIn, TOut> : OperationListBuilder
+    where TIn : notnull
+    where TOut : notnull
 {
-    internal OperationListBuilder(Operation<TLayerIn, TLastOut> operation): base(null)
+    internal OperationListBuilder(Operation<TIn, TOut> operation): base(null)
     {
         Operation = operation;
     }
@@ -31,14 +31,14 @@ public class OperationListBuilder<TLayerIn, TLastOut> : OperationListBuilder
         Operation = operation;
     }
 
-    public OperationListBuilder<TLayerIn, TOperationOut> AddOperation<TOperationOut>(Operation<TLastOut, TOperationOut> operation)
-        where TOperationOut : notnull
-        => new OperationListBuilder<TLayerIn, TOperationOut>(operation, this);
+    public OperationListBuilder<TIn, TNextOut> AddOperation<TNextOut>(Operation<TOut, TNextOut> operation)
+        where TNextOut : notnull
+        => new(operation, this);
 
-    public OperationList<TLayerIn, TLastOut> Build()
+    public OperationList<TIn, TOut> Build()
     {
         // Traverse the builder chain backwards to get all the operations in the reverse order
-        OperationList<TLayerIn, TLastOut> operations = [];
+        OperationList<TIn, TOut> operations = [];
 
         OperationListBuilder? builder = this;
         while (builder != null)

@@ -40,10 +40,10 @@ class StringToStringLayer : Layer<string, string>
 {
     public override OperationListBuilder<string, string> CreateOperationList()
     {
-        return AddOperation(new StringToStringOperation())
-            .AddOperation(new StringToStringOperation());
+        return AddOperation(new StringToStringOperation());
     }
-    protected override void EnsureSameShapeForInput(string input, string inputGradient) => throw new NotImplementedException();
+
+    protected override void EnsureSameShapeForInput(string? input, string? inputGradient) => throw new NotImplementedException();
 
     protected override void EnsureSameShapeForOutput(string? output, string? outputGradient) => throw new NotImplementedException();
 }
