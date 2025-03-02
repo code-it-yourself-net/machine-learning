@@ -85,13 +85,13 @@ public abstract class Layer<TIn, TOut> : Layer
         _operations.UpdateParams(this, optimizer);
     }
 
-    public abstract OperationBuilder<TOut> OnAddOperations(OperationBuilder<TIn> builder);
+    public abstract OperationListBuilder<TOut> OnAddOperations(OperationListBuilder<TIn> builder);
 
     protected virtual void SetupLayer(TIn input)
     {
         _operations =
-            OnAddOperations(new OperationBuilder<TIn>(null))
-                .AsOperationList<TIn>();
+            OnAddOperations(new OperationListBuilder<TIn>(null))
+                .Build<TIn>();
     }
 
     public override Type GetOutputType() => typeof(TOut);

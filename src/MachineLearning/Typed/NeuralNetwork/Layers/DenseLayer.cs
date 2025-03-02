@@ -26,17 +26,17 @@ public class DenseLayer : Layer<float[,], float[,]>
         _dropout = dropout;
     }
 
-    public override OperationBuilder<float[,]> OnAddOperations(OperationBuilder<float[,]> builder)
+    public override OperationListBuilder<float[,]> OnAddOperations(OperationListBuilder<float[,]> builder)
     {
         Debug.Assert(Input != null, "Input must be not null here.");
 
         float[,] weights = _paramInitializer.InitWeights(Input.GetLength((int)Dimension.Columns), _neurons);
         float[] biases = _paramInitializer.InitBiases(_neurons);
 
-        OperationBuilder<float[,]> res = builder
-            .AddOperation(new WeightMultiply(weights))
-            .AddOperation(new BiasAdd(biases))
-            .AddOperation(_activationFunction);
+        OperationListBuilder<float[,]> res = builder
+            .AddOperation<float[,]>(new WeightMultiply(weights))
+            .AddOperation<float[,]>(new BiasAdd(biases))
+            .AddOperation<float[,]>(_activationFunction);
 
         if (_dropout != null)
             res = res.AddOperation(_dropout);
