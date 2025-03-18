@@ -34,14 +34,35 @@ public class NumberWithGradTests
     }
 
     [TestMethod]
-    public void GradTest()
+    public void GradTest1()
     {
+        // Arrange
         NumberWithGrad a = 3;
         NumberWithGrad b = a * 4;
         NumberWithGrad c = b + 5;
+
+        // Act
         c.Backward();
 
+        // Assert
         Assert.AreEqual(4, a.Grad);
         Assert.AreEqual(1, b.Grad);
+    }
+
+    [TestMethod]
+    public void GradTest2()
+    {
+        // Arrange
+        NumberWithGrad a = 3;
+        NumberWithGrad b = a * 4;
+        NumberWithGrad c = b + 3;
+        NumberWithGrad d = a + 2;
+        NumberWithGrad e = c * d;
+
+        // Act
+        e.Backward();
+
+        // Assert
+        Assert.AreEqual(35, a.Grad);
     }
 }
