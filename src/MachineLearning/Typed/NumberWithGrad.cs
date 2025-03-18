@@ -39,7 +39,7 @@
             Backward(1);
         }
 
-        protected void Backward(float gradient)
+        private void Backward(float gradient)
         {
             Grad += gradient;
 
