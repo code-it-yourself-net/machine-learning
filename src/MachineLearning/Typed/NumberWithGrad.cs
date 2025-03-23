@@ -5,7 +5,7 @@
         public float Number { get; } = number;
         public float Grad { get; private set; } = 0;
 
-        // overload the Add operator
+        // define the Add operator
 
         public static NumberWithGrad operator +(NumberWithGrad a, NumberWithGrad b)
         {
@@ -16,7 +16,7 @@
             return res;
         }
 
-        // overload the Multiply operator
+        // define the Multiply operator
 
         public static NumberWithGrad operator *(NumberWithGrad a, NumberWithGrad b)
         {
