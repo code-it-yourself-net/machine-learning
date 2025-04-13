@@ -2,6 +2,8 @@
 // File name: TypedVsUntypedVsFlat.cs
 // Code It Yourself with .NET, 2024
 
+using System.Numerics.Tensors;
+
 using BenchmarkDotNet.Attributes;
 
 using MachineLearning;
@@ -9,15 +11,23 @@ using MachineLearning.Typed;
 
 namespace MatrixBenchmark;
 
+#pragma warning disable SYSLIB5001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+
 public class TypedVsUntypedVsFlat
 {
-    MatrixOld _matrix1Untyped = null!;
-    MatrixOld _matrix2Untyped = null!;
-    Matrix _matrix1Typed = null!;
-    Matrix _matrix2Typed = null!;
+    private MatrixOld _matrix1Untyped = null!;
+    private MatrixOld _matrix2Untyped = null!;
 
-    float[,] _array1 = null!;
-    float[,] _array2 = null!;
+    private Matrix _matrix1Typed = null!;
+    private Matrix _matrix2Typed = null!;
+
+    private float[,] _array1 = null!;
+    private float[,] _array2 = null!;
+
+    private readonly Tensor<float> _tensor1 = null!;
+    private readonly Tensor<float> _tensor2 = null!;
+
+    private float[] _flattenedArray1 = null!;
 
     // [Params(100, 1000)]
     [Params(100, 1000)]
@@ -55,9 +65,21 @@ public class TypedVsUntypedVsFlat
 
         _array1 = (float[,])matrix1.Clone();
         _array2 = (float[,])matrix2.Clone();
+
+        int rows = matrix1.GetLength(0);
+        int cols = matrix1.GetLength(1);
+        _flattenedArray1 = new float[rows * cols];
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                _flattenedArray1[i * cols + j] = matrix1[i, j];
+            }
+        }
     }
 
-    
+
     [Benchmark]
     public void UntypedMatrixMultiplication()
     {
@@ -100,6 +122,13 @@ public class TypedVsUntypedVsFlat
         float[,] result = _array1.Sigmoid();
     }
 
+    [Benchmark]
+    public void TensorPrimitivesSigmoid()
+    {
+        Span<float> dest = new(new float[_flattenedArray1.Length]);
+        TensorPrimitives.Sigmoid(new ReadOnlySpan<float>(_flattenedArray1), dest);
+    }
+
     //[Benchmark]
     //public void Softmax()
     //{
@@ -120,3 +149,5 @@ public class TypedVsUntypedVsFlat
     }
     */
 }
+
+#pragma warning restore SYSLIB5001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
