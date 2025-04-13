@@ -78,8 +78,7 @@ public class TypedVsUntypedVsFlat
             }
         }
     }
-
-
+    /*
     [Benchmark]
     public void UntypedMatrixMultiplication()
     {
@@ -97,7 +96,7 @@ public class TypedVsUntypedVsFlat
     {
         float[,] result = _array1.MultiplyDot(_array2);
     }
-
+    */
     //[Benchmark]
     //public void TypedMatrixMultiplicationWithMatrixArray()
     //{
@@ -121,12 +120,65 @@ public class TypedVsUntypedVsFlat
     {
         float[,] result = _array1.Sigmoid();
     }
-
+    
     [Benchmark]
     public void TensorPrimitivesSigmoid()
     {
-        Span<float> dest = new(new float[_flattenedArray1.Length]);
-        TensorPrimitives.Sigmoid(new ReadOnlySpan<float>(_flattenedArray1), dest);
+        int rows = _array1.GetLength(0);
+        int cols = _array1.GetLength(1);
+        float[] flattenedArray1 = new float[rows * cols];
+
+        for (int i = 0; i < rows; i++)
+        {
+            int rowStartIndex = i * cols;
+            for (int j = 0; j < cols; j++)
+            {
+                flattenedArray1[rowStartIndex + j] = _array1[i, j];
+            }
+        }
+
+        Span<float> dest = new(new float[flattenedArray1.Length]);
+        TensorPrimitives.Sigmoid(new ReadOnlySpan<float>(flattenedArray1), dest);
+
+        // unflatten the result
+        float[,] result = new float[rows, cols];
+        for (int i = 0; i < rows; i++)
+        {
+            int rowStartIndex = i * cols;
+            for (int j = 0; j < cols; j++)
+            {
+                result[i, j] = dest[rowStartIndex + j];
+            }
+        }
+    }
+
+    [Benchmark]
+    public void TensorPrimitivesSigmoid2()
+    {
+        int rows = _array1.GetLength(0);
+        int cols = _array1.GetLength(1);
+        float[] flattenedArray1 = new float[rows * cols];
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                flattenedArray1[i * cols + j] = _array1[i, j];
+            }
+        }
+
+        Span<float> dest = new(new float[flattenedArray1.Length]);
+        TensorPrimitives.Sigmoid(new ReadOnlySpan<float>(flattenedArray1), dest);
+
+        // unflatten the result
+        float[,] result = new float[rows, cols];
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                result[i, j] = dest[i * cols + j];
+            }
+        }
     }
 
     //[Benchmark]
