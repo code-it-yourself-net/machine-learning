@@ -77,6 +77,14 @@ public class TypedVsUntypedVsFlat
                 _flattenedArray1[i * cols + j] = matrix1[i, j];
             }
         }
+
+        float[] vectorData = { 1.0f, 2.0f, 3.0f, 4.0f };
+
+        // Convert tensor1 to ReadOnlySpan<float>
+        
+        Tensor<float> tensor1 = Tensor.Create(vectorData, new ReadOnlySpan<nint>([vectorData.Length]));
+        //tensor1.AsReadOnlyTensorSpan()
+        //Tensor<float> vector = new Tensor<float>(vectorData, new[] { vectorData.Length }); // Shape: [4]
     }
     /*
     [Benchmark]
