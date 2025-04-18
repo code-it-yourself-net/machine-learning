@@ -48,4 +48,11 @@ public readonly ref struct Matrix
         return _span[row * (int)_shape[1] + col];
 
     }
+
+    public readonly Matrix Sigmoid()
+    {
+        Span<float> result = new(new float[_span.Length]);
+        TensorPrimitives.Sigmoid(_span, result);
+        return new Matrix(result, _shape);
+    }
 }

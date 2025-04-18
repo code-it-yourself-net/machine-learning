@@ -306,4 +306,35 @@ public class MatrixOldTests
             }
         }
     }
+
+    [TestMethod]
+    public void SigmoidAreEqual()
+    {
+        MatrixOld matrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
+        Matrix typedMatrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
+        float[,] array = new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } };
+        Numerics.Matrix numericMatrix = new(array);
+
+        MatrixOld matrix1 = matrix.Sigmoid();
+        Matrix matrix2 = typedMatrix.Sigmoid();
+        float[,] matrix3 = array.Sigmoid();
+        Numerics.Matrix matrix4 = numericMatrix.Sigmoid();
+        float epsilon = 1e-7f;
+
+        //Assert.AreEqual(matrix1, matrix2);
+        // assert that the two matrices are equal
+        Assert.AreEqual(matrix1.GetDimension(Dimension.Rows), matrix2.GetDimension(Dimension.Rows));
+        Assert.AreEqual(matrix1.GetDimension(Dimension.Rows), matrix3.GetLength((int)Dimension.Rows));
+        Assert.AreEqual(matrix1.GetDimension(Dimension.Columns), matrix2.GetDimension(Dimension.Columns));
+        Assert.AreEqual(matrix1.GetDimension(Dimension.Columns), matrix3.GetLength((int)Dimension.Columns));
+        for (int i = 0; i < matrix1.GetDimension(Dimension.Rows); i++)
+        {
+            for (int j = 0; j < matrix1.GetDimension(Dimension.Columns); j++)
+            {
+                Assert.AreEqual(matrix1.Array.GetValue(i, j), matrix2.Array.GetValue(i, j));
+                Assert.AreEqual(matrix1.Array.GetValue(i, j), matrix3.GetValue(i, j));
+                Assert.AreEqual((float)matrix1.Array.GetValue(i, j)!, matrix4.GetValue(i, j), epsilon);
+            }
+        }
+    }
 }

@@ -96,26 +96,26 @@ public class TypedVsUntypedVsFlat
     [Benchmark]
     public void UntypedAddScalar()
     {
-        MatrixOld result = _matrix1Untyped.Add(scalar);
+        _ = _matrix1Untyped.Add(scalar);
     }
 
     [Benchmark]
     public void TypedAddScalar()
     {
-        Matrix result = _matrix1Typed.Add(scalar);
+        _ = _matrix1Typed.Add(scalar);
     }
 
     [Benchmark]
     public void ArrayAddScalar()
     {
-        float[,] result = _array1.Add(scalar);
+        _ = _array1.Add(scalar);
     }
 
     [Benchmark]
     public void NumericMatrixAddScalar() 
     {
-        MachineLearning.Numerics.Matrix matrix = new MachineLearning.Numerics.Matrix(_array1);
-        MachineLearning.Numerics.Matrix result = matrix.Add(scalar);
+        MachineLearning.Numerics.Matrix matrix = new(_array1);
+        _ = matrix.Add(scalar);
     }
 
 
@@ -144,56 +144,33 @@ public class TypedVsUntypedVsFlat
     //    Matrix result = _matrix1Typed.MultiplyDot(_matrix2Typed);
     //}
 
-    /*
+    
     [Benchmark]
     public void UntypedSigmoid()
     {
-        MatrixOld result = _matrix1Untyped.Sigmoid();
+        _ = _matrix1Untyped.Sigmoid();
     }
 
     [Benchmark]
     public void TypedSigmoid()
     {
-        Matrix result = _matrix1Typed.Sigmoid();
+        _ = _matrix1Typed.Sigmoid();
     }
 
     [Benchmark]
     public void ArraySigmoid()
     {
-        float[,] result = _array1.Sigmoid();
+        _ = _array1.Sigmoid();
     }
     
     [Benchmark]
     public void TensorPrimitivesSigmoid()
     {
-        int rows = _array1.GetLength(0);
-        int cols = _array1.GetLength(1);
-        float[] flattenedArray1 = new float[rows * cols];
-
-        for (int i = 0; i < rows; i++)
-        {
-            int rowStartIndex = i * cols;
-            for (int j = 0; j < cols; j++)
-            {
-                flattenedArray1[rowStartIndex + j] = _array1[i, j];
-            }
-        }
-
-        Span<float> dest = new(new float[flattenedArray1.Length]);
-        TensorPrimitives.Sigmoid(new ReadOnlySpan<float>(flattenedArray1), dest);
-
-        // unflatten the result
-        float[,] result = new float[rows, cols];
-        for (int i = 0; i < rows; i++)
-        {
-            int rowStartIndex = i * cols;
-            for (int j = 0; j < cols; j++)
-            {
-                result[i, j] = dest[rowStartIndex + j];
-            }
-        }
+        MachineLearning.Numerics.Matrix matrix = new(_array1);
+        _ = matrix.Sigmoid();
     }
 
+    /*
     [Benchmark]
     public void TensorPrimitivesSigmoid2()
     {
