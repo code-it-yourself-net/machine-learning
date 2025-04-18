@@ -33,7 +33,7 @@ public readonly ref struct Matrix
         _shape = shape;
     }
 
-    internal readonly Matrix Add(float scalar)
+    public readonly Matrix Add(float scalar)
     {
         Span<float> result = new(new float[_span.Length]);
         TensorPrimitives.Add(_span, scalar, result);
@@ -42,10 +42,9 @@ public readonly ref struct Matrix
 
     internal float GetValue(int row, int col)
     {
-        if (row < 0 || row >= _shape[0])
-            throw new ArgumentOutOfRangeException(nameof(row), "Row index is out of range.");
-        if (col < 0 || col >= _shape[1])
-            throw new ArgumentOutOfRangeException(nameof(col), "Column index is out of range.");
+        Debug.Assert(row >= 0 && row < _shape[0], "Row index is out of range.");
+        Debug.Assert(col >= 0 && col < _shape[1], "Column index is out of range.");
+        
         return _span[row * (int)_shape[1] + col];
 
     }

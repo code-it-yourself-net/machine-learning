@@ -24,10 +24,14 @@ public class TypedVsUntypedVsFlat
     private float[,] _array1 = null!;
     private float[,] _array2 = null!;
 
-    private readonly Tensor<float> _tensor1 = null!;
-    private readonly Tensor<float> _tensor2 = null!;
+    private const float scalar = 2.94f;
 
-    private float[] _flattenedArray1 = null!;
+    // private MachineLearning.Numerics.Matrix _matrix1 = null!;
+
+    //private readonly Tensor<float> _tensor1 = null!;
+    //private readonly Tensor<float> _tensor2 = null!;
+
+    //private float[] _flattenedArray1 = null!;
 
     // [Params(100, 1000)]
     [Params(100, 1000)]
@@ -66,6 +70,7 @@ public class TypedVsUntypedVsFlat
         _array1 = (float[,])matrix1.Clone();
         _array2 = (float[,])matrix2.Clone();
 
+        /*
         int rows = matrix1.GetLength(0);
         int cols = matrix1.GetLength(1);
         _flattenedArray1 = new float[rows * cols];
@@ -85,7 +90,35 @@ public class TypedVsUntypedVsFlat
         Tensor<float> tensor1 = Tensor.Create(vectorData, new ReadOnlySpan<nint>([vectorData.Length]));
         //tensor1.AsReadOnlyTensorSpan()
         //Tensor<float> vector = new Tensor<float>(vectorData, new[] { vectorData.Length }); // Shape: [4]
+        */
     }
+
+    [Benchmark]
+    public void UntypedAddScalar()
+    {
+        MatrixOld result = _matrix1Untyped.Add(scalar);
+    }
+
+    [Benchmark]
+    public void TypedAddScalar()
+    {
+        Matrix result = _matrix1Typed.Add(scalar);
+    }
+
+    [Benchmark]
+    public void ArrayAddScalar()
+    {
+        float[,] result = _array1.Add(scalar);
+    }
+
+    [Benchmark]
+    public void NumericMatrixAddScalar() 
+    {
+        MachineLearning.Numerics.Matrix matrix = new MachineLearning.Numerics.Matrix(_array1);
+        MachineLearning.Numerics.Matrix result = matrix.Add(scalar);
+    }
+
+
     /*
     [Benchmark]
     public void UntypedMatrixMultiplication()
@@ -111,6 +144,7 @@ public class TypedVsUntypedVsFlat
     //    Matrix result = _matrix1Typed.MultiplyDot(_matrix2Typed);
     //}
 
+    /*
     [Benchmark]
     public void UntypedSigmoid()
     {
@@ -187,7 +221,7 @@ public class TypedVsUntypedVsFlat
                 result[i, j] = dest[i * cols + j];
             }
         }
-    }
+    }*/
 
     //[Benchmark]
     //public void Softmax()
