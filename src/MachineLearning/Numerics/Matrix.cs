@@ -42,11 +42,11 @@ public readonly ref struct Matrix
 
     internal float GetValue(int row, int col)
     {
-        int length = _span.Length;
+        if (row < 0 || row >= _shape[0])
+            throw new ArgumentOutOfRangeException(nameof(row), "Row index is out of range.");
+        if (col < 0 || col >= _shape[1])
+            throw new ArgumentOutOfRangeException(nameof(col), "Column index is out of range.");
+        return _span[row * (int)_shape[1] + col];
 
-        Debug.Assert(row * length + col < length, "Index out of range.");
-        Debug.Assert(row >= 0 && col >= 0, "Index out of range.");
-        
-        return _span[row * length + col];
     }
 }
