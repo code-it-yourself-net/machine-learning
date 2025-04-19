@@ -48,9 +48,9 @@ class StringToStringLayer : Layer<string, string>
     protected override void EnsureSameShapeForOutput(string? output, string? outputGradient) => throw new NotImplementedException();
 }
 
-class IntToStringNeuralNetword : NeuralNetwork<int, string>
+class IntToStringNeuralNetwork : NeuralNetwork<int, string>
 {
-    public IntToStringNeuralNetword(Loss<string> lossFunction, SeededRandom? random) : base(lossFunction, random)
+    public IntToStringNeuralNetwork(Loss<string> lossFunction, SeededRandom? random) : base(lossFunction, random)
     {
     }
 

@@ -12,7 +12,8 @@ namespace MachineLearning.Typed.NeuralNetwork.Operations;
 /// </summary>
 public class Sigmoid : Operation2D
 {
-    protected override float[,] CalcOutput(bool inference) => Input.Sigmoid();
+    protected override float[,] CalcOutput(bool inference) 
+        => Input.Sigmoid();
 
     protected override float[,] CalcInputGradient(float[,] outputGradient)
     {
