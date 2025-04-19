@@ -7,6 +7,12 @@ using System.Numerics.Tensors;
 
 namespace MachineLearning.Numerics;
 
+/*
+ * New Matrix type (in the MachineLearning.Numerics namespace) that is using Span<T> and 
+ * ReadOnlySpan<T> to avoid heap allocations.
+ * Should be a little faster than the original Matrix type.
+ */
+
 public readonly ref struct Matrix
 {
     private readonly Span<float> _span;
