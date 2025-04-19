@@ -69,7 +69,7 @@ public abstract class Trainer<TInputData, TPrediction>(
 
         logger?.LogInformation("");
         logger?.LogInformation("===== Begin Log =====");
-        logger?.LogInformation("Fit started with params: epochs: {epochs}, batchSize: {batchSize}, optimizer: {optimizer}, random: {random}.", epochs, batchSize, optimizer, random);
+        logger?.LogInformation("Fit started with params: epochs: {epochs}, evalEveryEpochs: {evalEveryEpochs}, logEveryEpochs: {logEveryEpochs}, batchSize: {batchSize}, optimizer: {optimizer}, random: {random}.", epochs, evalEveryEpochs, logEveryEpochs, batchSize, optimizer, random);
         logger?.LogInformation("Model layers:");
         foreach (Layer layer in neuralNetwork.Layers)
         {

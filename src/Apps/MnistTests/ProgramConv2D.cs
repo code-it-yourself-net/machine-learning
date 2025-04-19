@@ -116,7 +116,8 @@ internal class ProgramConv2D
             dataSource, 
             EvalFunction, 
             epochs: Program.Epochs, 
-            evalEveryEpochs: 1, 
+            evalEveryEpochs: Program.EvalEveryEpochs,
+            logEveryEpochs: Program.LogEveryEpochs,
             batchSize: Program.BatchSize
         );
 

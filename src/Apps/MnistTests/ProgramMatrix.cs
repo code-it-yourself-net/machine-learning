@@ -99,8 +99,8 @@ internal class ProgramMatrix
         trainer.Fit(
             dataSource, 
             EvalFunction, 
-            epochs: Program.Epochs, 
-            evalEveryEpochs: 1, 
+            epochs: Program.Epochs,
+            evalEveryEpochs: Program.EvalEveryEpochs,
             batchSize: Program.BatchSize
         );
 

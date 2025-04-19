@@ -8,6 +8,8 @@ namespace MnistTests
         public const int RandomSeed = 241030;
         public const int Epochs = 10;
         public const int BatchSize = 100;
+        public const int EvalEveryEpochs = 2;
+        public const int LogEveryEpochs = 1;
 
         private static void Main(string[] args)
         {

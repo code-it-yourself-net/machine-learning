@@ -108,9 +108,9 @@ internal class ProgramTyped
         trainer.Fit(
             dataSource, 
             EvalFunction, 
-            epochs: Program.Epochs, 
-            evalEveryEpochs: 2, 
-            logEveryEpochs: 1, 
+            epochs: Program.Epochs,
+            evalEveryEpochs: Program.EvalEveryEpochs,
+            logEveryEpochs: Program.LogEveryEpochs,
             batchSize: Program.BatchSize
         );
 

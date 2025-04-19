@@ -78,7 +78,7 @@ public class Trainer(
     {
         Stopwatch trainWatch = Stopwatch.StartNew();
 
-        logger?.LogInformation("Fit started with params: epochs: {epochs}, batchSize: {batchSize}, optimizer: {optimizer}, random: {random}.", epochs, batchSize, optimizer, random);
+        logger?.LogInformation("Fit started with params: epochs: {epochs}, evalEveryEpochs: {evalEveryEpochs}, batchSize: {batchSize}, optimizer: {optimizer}, random: {random}.", epochs, evalEveryEpochs, batchSize, optimizer, random);
         logger?.LogInformation("Model layers:");
         foreach (Layer layer in neuralNetwork.Layers)
         {
