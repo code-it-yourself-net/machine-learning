@@ -63,7 +63,7 @@ public class Matrix
     /// <returns>A new matrix filled with zeros.</returns>
     public static Matrix Zeros(Matrix matrix)
     {
-        (int rows, int columns) = GetDimensions(matrix);
+        (int rows, int columns) = matrix.GetDimensions();
         return Zeros(rows, columns);
     }
 
@@ -77,7 +77,7 @@ public class Matrix
 
     public static Matrix ZeroOnes(Matrix matrix, float onesProbability, Random random)
     {
-        (int rows, int columns) = GetDimensions(matrix);
+        (int rows, int columns) = matrix.GetDimensions();
         float[,] array = new float[rows, columns];
         for (int i = 0; i < rows; i++)
         {
@@ -99,7 +99,7 @@ public class Matrix
     /// <returns>A new matrix filled with ones.</returns>
     public static Matrix Ones(Matrix matrix)
     {
-        (int rows, int columns) = GetDimensions(matrix);
+        (int rows, int columns) = matrix.GetDimensions();
         return Ones(rows, columns);
     }
 
@@ -1023,8 +1023,8 @@ public class Matrix
     public int GetDimension(Dimension dimension) 
         => _array.GetLength((int)dimension);
 
-    private static (int Rows, int Columns) GetDimensions(Matrix matrix) 
-        => (matrix.GetDimension(Dimension.Rows), matrix.GetDimension(Dimension.Columns));
+    private (int Rows, int Columns) GetDimensions() 
+        => (GetDimension(Dimension.Rows), GetDimension(Dimension.Columns));
 
     /// <summary>
     /// Creates a new empty instance of the <see cref="System.Array"/> class with the same dimensions as this matrix.
