@@ -16,7 +16,7 @@ for (int i = 0; i < data.Length; i++)
     double x = rand.NextDouble() * 10;
     double y = rand.NextDouble() * 10;
     double z = trueA * x + trueB * y + trueC;
-    data[i] = new double[] { x, y, z };
+    data[i] = [x, y, z];
 }
 
 // Initialize weights
