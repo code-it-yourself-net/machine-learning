@@ -1,66 +1,79 @@
 ﻿// Machine Learning Utils
-// File name: Class1.cs
+// File name: Program.cs
 // Code It Yourself with .NET, 2024
 
-
-// Ground truth coefficients
-double trueA = 3.0;
-double trueB = -2.0;
-double trueC = 5.0;
-
-// Training data (x, y) => z = A*x + B*y + C
-double[][] data = new double[100][];
-Random rand = new();
-for (int i = 0; i < data.Length; i++)
+internal class Program
 {
-    double x = rand.NextDouble() * 10;
-    double y = rand.NextDouble() * 10;
-    double z = trueA * x + trueB * y + trueC;
-    data[i] = [x, y, z];
-}
-
-// Initialize weights
-double A = 0, B = 0, C = 0;
-double learningRate = 0.0005;
-
-// Training loop
-for (int epoch = 0; epoch < 30_000; epoch++)
-{
-    double dA = 0, dB = 0, dC = 0;
-    double loss = 0;
-
-    foreach (double[] sample in data)
+    public static void Main()
     {
-        double x = sample[0];
-        double y = sample[1];
-        double z = sample[2];
+        // True parameters for data generation
+        double[] trueW = { 3.0, -2.0 }; // A and B
+        double trueC = 5.0;             // Bias
 
-        double pred = A * x + B * y + C;
-        double error = pred - z;
+        int numSamples = 100;
+        double[][] inputs = new double[numSamples][];
+        double[] targets = new double[numSamples];
+        Random rand = new();
 
-        loss += error * error;
+        // Generate training data
+        for (int i = 0; i < numSamples; i++)
+        {
+            double x = rand.NextDouble() * 10;
+            double y = rand.NextDouble() * 10;
+            double z = trueW[0] * x + trueW[1] * y + trueC;
 
-        // Compute gradients
-        dA += error * x;
-        dB += error * y;
-        dC += error;
+            inputs[i] = [x, y];
+            targets[i] = z;
+        }
+
+        // Initialize weight matrix W [2x1] and bias
+        double[,] W = new double[2, 1] { { 0.0 }, { 0.0 } }; // weights A and B
+        double C = 0.0; // bias
+
+        double learningRate = 0.0005;
+        int epochs = 30_000;
+
+        // Training loop
+        for (int epoch = 0; epoch < epochs; epoch++)
+        {
+            double[,] gradW = new double[2, 1];
+            double gradC = 0;
+            double loss = 0;
+
+            for (int i = 0; i < numSamples; i++)
+            {
+                double[] xVec = inputs[i];   // xVec = [x, y]
+                double z = targets[i];       // true output
+
+                // Prediction: dot(W.T, xVec) + C
+                double pred = W[0, 0] * xVec[0] + W[1, 0] * xVec[1] + C;
+                double error = pred - z;
+
+                loss += error * error;
+
+                // Accumulate gradients
+                gradW[0, 0] += error * xVec[0];
+                gradW[1, 0] += error * xVec[1];
+                gradC += error;
+            }
+
+            // Average gradients
+            gradW[0, 0] /= numSamples;
+            gradW[1, 0] /= numSamples;
+            gradC /= numSamples;
+            loss /= numSamples;
+
+            // Gradient descent update
+            W[0, 0] -= learningRate * gradW[0, 0];
+            W[1, 0] -= learningRate * gradW[1, 0];
+            C -= learningRate * gradC;
+
+            if (epoch % 1000 == 0)
+                Console.WriteLine($"Epoch {epoch}, Loss: {loss:F4}, W: [{W[0, 0]:F3}, {W[1, 0]:F3}], C: {C:F3}");
+        }
+
+        Console.WriteLine($"\nLearned weights: W = [{W[0, 0]:F3}, {W[1, 0]:F3}], C = {C:F3}");
+        Console.WriteLine($"Expected values:  W = [{trueW[0]}, {trueW[1]}], C = {trueC}");
+        Console.ReadLine();
     }
-
-    // Average gradients
-    dA /= data.Length;
-    dB /= data.Length;
-    dC /= data.Length;
-    loss /= data.Length;
-
-    // Update weights (gradient descent)
-    A -= learningRate * dA;
-    B -= learningRate * dB;
-    C -= learningRate * dC;
-
-    if (epoch % 1000 == 0)
-        Console.WriteLine($"Epoch {epoch}, Loss: {loss:F4}, A: {A:F3}, B: {B:F3}, C: {C:F3}");
 }
-
-Console.WriteLine($"\nLearned parameters: A = {A:F3}, B = {B:F3}, C = {C:F3}");
-Console.WriteLine($"Expected parameters: A = {trueA}, B = {trueB}, C = {trueC}");
-Console.ReadLine();

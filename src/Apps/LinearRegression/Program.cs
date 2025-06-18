@@ -18,12 +18,30 @@ Console.WriteLine("Linear function");
 //Matrix yTrain = new(new float[,] { { -47 },      { -5 },   { -8 },    { -11 }, { -14 },  { 3 },     { 20 },      { 99 },       { 6 },       { 53 }, 
 //    { 10 }, { -4 }, { 15 } });
 // Uncomment for tests
-Matrix xTrain = new(new float[,] { { 10, 20 }, { -10, -20 }, { 0, 0 } });
-Matrix yTrain = new(new float[,] { { -47 },     { 53 },         { 3 } });
+
+// True parameters for data generation
+double[] trueW = { 3.0, -2.0 }; // A and B
+double trueC = 5.0;             // Bias
+Random rand = new Random();
+int numSamples = 100;
+Matrix xTrain = new Matrix(numSamples, 2);
+Matrix yTrain = new Matrix(numSamples, 1);
+// Generate training data
+for (int i = 0; i < numSamples; i++)
+{
+    double x = rand.NextDouble() * 10;
+    double y = rand.NextDouble() * 10;
+    double z = trueW[0] * x + trueW[1] * y + trueC;
+    //xTrain.SetRow(i, new Matrix(new float[,] { { (float)x }, { (float)y } }));
+    //yTrain.SetRow(i, new Matrix(new float[,] { { (float)z } }));
+    yTrain.Array[i, 0] = (float)z;
+    xTrain.Array[i, 0] = (float)x;
+    xTrain.Array[i, 1] = (float)y;
+}
 
 int batchSize = xTrain.GetDimension(Dimension.Rows); // 13
 
-(Matrix weights, float bias, float loss) = Train(xTrain, yTrain, iterations: 3_500, learningRate: 0.00001f, batchSize: batchSize);
+(Matrix weights, float bias, float loss) = Train(xTrain, yTrain, iterations: 3_000, learningRate: 0.0005f, batchSize: batchSize);
 
 Console.WriteLine();
 Console.WriteLine($"weights: \n{weights}");
@@ -54,8 +72,10 @@ static (Matrix n, Matrix p, float loss) ForwardLinearRegression(Matrix xBatch, M
     // Add the bias to the values to make the predictions.
     Matrix p = n.Add(bias);
 
+    Matrix errors = yBatch.Subtract(p);
+
     // Calculate the mean squared error loss.
-    float loss = yBatch.Subtract(p).Power(2).Mean();
+    float loss = errors.Power(2).Sum(); // was Mean
 
     return (n, p, loss);
 }
@@ -126,7 +146,7 @@ static (Matrix weights, float bias, float loss) Train(Matrix xTrain, Matrix yTra
     //float bias = random.NextSingle() - 0.5f;
 
     // Uncomment for tests:
-    Matrix weights = new(new float[2, 1] { { -1f }, { 1f } });
+    Matrix weights = new(new float[2, 1] { { -0f }, { 0f } });
     float bias = 0;
 
     int batchStart = int.MaxValue;
