@@ -30,10 +30,14 @@ internal class ProgramSimple
 
         // 2. Initialize model (weights)
         float a1 = 0, a2 = 0, b = 0;
-        float learningRate = 0.0005f;
+        const float lr = 0.0005f;
 
         // 3. Training loop
-        for (int epoch = 0; epoch < 11_000; epoch++)
+
+        // Number iterations (epochs)
+        const int interations = 11_000;
+
+        for (int iteration = 0; iteration < interations; iteration++)
         {
             // Initialize gradients
             float delta_a1 = 0, delta_a2 = 0, delta_b = 0;
@@ -64,18 +68,18 @@ internal class ProgramSimple
             loss /= n;
 
             // Update weights (gradient descent)
-            a1 -= learningRate * delta_a1;
-            a2 -= learningRate * delta_a2;
-            b -= learningRate * delta_b;
+            a1 -= lr * delta_a1;
+            a2 -= lr * delta_a2;
+            b -= lr * delta_b;
 
-            if (epoch % 1000 == 0)
-                Console.WriteLine($"Epoch {epoch}, Loss: {loss:F4}, A1: {a1:F3}, A2: {a2:F3}, B: {b:F3}");
+            if (iteration % 1000 == 0)
+                Console.WriteLine($"Iteration (epoch) {iteration}, loss: {loss:F4}, a1: {a1:F3}, a2: {a2:F3}, b: {b:F3}");
         }
 
         // 4. Output learned parameters
 
-        Console.WriteLine($"\nLearned parameters: A1 = {a1:F3}, A2 = {a2:F3}, B = {b:F3}");
-        Console.WriteLine($"Expected parameters: A1 = {true_a1}, A2 = {true_a2}, B = {true_b}");
+        Console.WriteLine($"\nLearned parameters: a1 = {a1:F3}, a2 = {a2:F3}, b = {b:F3}");
+        Console.WriteLine($"Expected parameters: a1 = {true_a1}, a2 = {true_a2}, b = {true_b}");
         Console.ReadLine();
     }
 }
