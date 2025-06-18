@@ -5,7 +5,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	  <StartupObject>ProgramSimple</StartupObject>
+	  <StartupObject>ProgramSimple2</StartupObject>
   </PropertyGroup>
 
 </Project>
