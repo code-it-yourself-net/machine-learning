@@ -9,21 +9,21 @@ internal class ProgramSimple
         // 1. Prepare training data
 
         // Ground truth coefficients
-        float trueA1 = 3.0f;
-        float trueA2 = -2.0f;
-        float trueB = 5.0f;
+        float true_a1 = 3.0f;
+        float true_a2 = -2.0f;
+        float true_b = 5.0f;
 
         // Number of training samples
         const int n = 100; 
 
-        // Training data (x1, x2) => y = A1*x1 + A2*x2 + B
+        // Training data (x1, x2) => y = a1*x1 + a2*x2 + b
         float[][] data = new float[n][];
         Random rand = new();
         for (int i = 0; i < data.Length; i++)
         {
             float x1 = rand.NextSingle() * 10;
             float x2 = rand.NextSingle() * 10;
-            float y = trueA1 * x1 + trueA2 * x2 + trueB;
+            float y = true_a1 * x1 + true_a2 * x2 + true_b;
             data[i] = [x1, x2, y];
         }
 
@@ -34,7 +34,8 @@ internal class ProgramSimple
         // 3. Training loop
         for (int epoch = 0; epoch < 30_000; epoch++)
         {
-            float dA1 = 0, dA2 = 0, dB = 0;
+            // Initialize gradients
+            float delta_a1 = 0, delta_a2 = 0, delta_b = 0;
             float loss = 0;
 
             foreach (float[] sample in data)
@@ -43,27 +44,28 @@ internal class ProgramSimple
                 float x2 = sample[1];
                 float y = sample[2];
 
-                float yHat = a1 * x1 + a2 * x2 + b; // yHat = prediction
-                float error = y - yHat; // zgodnie z opisem: (y_i - ŷ_i)
+                // yHat = prediction
+                float yHat = a1 * x1 + a2 * x2 + b;
+                float error = y - yHat;
 
                 loss += error * error;
 
-                // Gradients according to the provided formulas
-                dA1 += error * x1;
-                dA2 += error * x2;
-                dB += error;
+                // Gradients (deltas) according to the provided formulas
+                delta_a1 += error * x1;
+                delta_a2 += error * x2;
+                delta_b += error;
             }
 
             // Apply the -2/n factor to gradients
-            dA1 = -2.0f / n * dA1;
-            dA2 = -2.0f / n * dA2;
-            dB = -2.0f / n * dB;
+            delta_a1 = -2.0f / n * delta_a1;
+            delta_a2 = -2.0f / n * delta_a2;
+            delta_b = -2.0f / n * delta_b;
             loss /= n;
 
             // Update weights (gradient descent)
-            a1 -= learningRate * dA1;
-            a2 -= learningRate * dA2;
-            b -= learningRate * dB;
+            a1 -= learningRate * delta_a1;
+            a2 -= learningRate * delta_a2;
+            b -= learningRate * delta_b;
 
             if (epoch % 1000 == 0)
                 Console.WriteLine($"Epoch {epoch}, Loss: {loss:F4}, A1: {a1:F3}, A2: {a2:F3}, B: {b:F3}");
@@ -72,7 +74,7 @@ internal class ProgramSimple
         // 4. Output learned parameters
 
         Console.WriteLine($"\nLearned parameters: A1 = {a1:F3}, A2 = {a2:F3}, B = {b:F3}");
-        Console.WriteLine($"Expected parameters: A1 = {trueA1}, A2 = {trueA2}, B = {trueB}");
+        Console.WriteLine($"Expected parameters: A1 = {true_a1}, A2 = {true_a2}, B = {true_b}");
         Console.ReadLine();
     }
 }
