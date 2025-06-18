@@ -33,6 +33,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{02
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OperationLayerBuilder", "examples\OperationBuilder\OperationLayerBuilder.csproj", "{165CFB9C-9A24-4600-A15B-D82B0FF7742C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLinearRegression", "src\Apps\SimpleLinearRegression\SimpleLinearRegression.csproj", "{A33E9A45-73C9-406D-9CD3-797B74E7D622}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,10 @@ Global
 		{165CFB9C-9A24-4600-A15B-D82B0FF7742C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{165CFB9C-9A24-4600-A15B-D82B0FF7742C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{165CFB9C-9A24-4600-A15B-D82B0FF7742C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A33E9A45-73C9-406D-9CD3-797B74E7D622}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A33E9A45-73C9-406D-9CD3-797B74E7D622}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A33E9A45-73C9-406D-9CD3-797B74E7D622}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A33E9A45-73C9-406D-9CD3-797B74E7D622}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,6 +101,7 @@ Global
 		{EE5EA367-F837-788F-DEE4-8FCC89D9A941} = {DA17D397-27BE-442A-9FB6-F89E514D4B64}
 		{6E42C7C1-11AB-EE5A-5D7E-301E89DFB5C1} = {DA17D397-27BE-442A-9FB6-F89E514D4B64}
 		{165CFB9C-9A24-4600-A15B-D82B0FF7742C} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{A33E9A45-73C9-406D-9CD3-797B74E7D622} = {DA17D397-27BE-442A-9FB6-F89E514D4B64}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2ACF4B1F-AAFE-407D-9813-4974A8111568}

@@ -12,10 +12,18 @@ using MachineLearning;
 // main method
 
 Console.WriteLine("Linear function");
-Matrix xTrain = new(new float[,] { { 10, 20 }, { 2, 3 }, { 3, 4 }, { 4, 5 }, { 5, 6 }, { 0, 0 }, { -5, -6 }, { -100f, 2f } });
-Matrix yTrain = new(new float[,] { { -30 }, { -5 }, { -7 }, { -9 }, { -11 }, { 0 }, { 11 }, { 98f } });
+// -1 * x + (-2) * y + 3
+//Matrix xTrain = new(new float[,] { { 10, 20 }, { 2, 3 }, { 3, 4 }, { 4, 5 }, { 5, 6 }, { 0, 0 }, { -5, -6 }, { -100, 2 }, { -1, -1}, { -10, -20 },
+//    { 7 , -7 }, { -7, 7 }, { -4, -4 } });
+//Matrix yTrain = new(new float[,] { { -47 },      { -5 },   { -8 },    { -11 }, { -14 },  { 3 },     { 20 },      { 99 },       { 6 },       { 53 }, 
+//    { 10 }, { -4 }, { 15 } });
+// Uncomment for tests
+Matrix xTrain = new(new float[,] { { 10, 20 }, { -10, -20 }, { 0, 0 } });
+Matrix yTrain = new(new float[,] { { -47 },     { 53 },         { 3 } });
 
-(Matrix weights, float bias, float loss) = Train(xTrain, yTrain, iterations: 1_500, learningRate: 0.00001f, batchSize: 10);
+int batchSize = xTrain.GetDimension(Dimension.Rows); // 13
+
+(Matrix weights, float bias, float loss) = Train(xTrain, yTrain, iterations: 3_500, learningRate: 0.00001f, batchSize: batchSize);
 
 Console.WriteLine();
 Console.WriteLine($"weights: \n{weights}");
@@ -57,8 +65,11 @@ static (Matrix weightsLossGradient, float biasLossGradient) LossGradients(Matrix
 {
     int batchSize = xBatch.GetDimension(Dimension.Rows);
 
+    // P = predictions
+    // L = loss
+
     // Calculate the derivate of loss with respect to predictions.
-    Matrix dLdP = yBatch.Subtract(p).Multiply(-2f / batchSize);
+    Matrix dLdP = yBatch.Subtract(p).Multiply(-2f /*/ batchSize*/);
 
     // Calculate the derivate of predictions with respect to n.
     Matrix dPdN = Matrix.Ones(n);
@@ -77,7 +88,7 @@ static (Matrix weightsLossGradient, float biasLossGradient) LossGradients(Matrix
     Matrix dLdPxdPdBias = dLdP.Multiply(dPdBias);
 
     // Calculate the derivate of loss with respect to bias.
-    float dLdBias = dLdPxdPdBias.Sum();
+    float dLdBias = dLdPxdPdBias.Sum()  / batchSize;
 
     return (dLdW, dLdBias);
 }
@@ -111,12 +122,12 @@ static (Matrix weights, float bias, float loss) Train(Matrix xTrain, Matrix yTra
     else
         random = new();
 
-    Matrix weights = Matrix.Random(xTrain.GetDimension(Dimension.Columns), 1, random);
-    float bias = random.NextSingle() - 0.5f;
+    //Matrix weights = Matrix.Random(xTrain.GetDimension(Dimension.Columns), 1, random);
+    //float bias = random.NextSingle() - 0.5f;
 
     // Uncomment for tests:
-    // Matrix weights = new(new float[2, 1] { { -1f }, { 1f } });
-    // float bias = 0;
+    Matrix weights = new(new float[2, 1] { { -1f }, { 1f } });
+    float bias = 0;
 
     int batchStart = int.MaxValue;
 
