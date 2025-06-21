@@ -11,8 +11,8 @@ internal class ProgramSimple3
         // 1. Set the parameters for the model
 
         const float lr = 0.0005f;
-        const int interations = 35_000;
-        const int printEvery = 1_000;
+        const int interations = 4; //  35_000;
+        const int printEvery = 1; //  1_000;
 
         // 2. Prepare training data
 
@@ -38,7 +38,7 @@ internal class ProgramSimple3
             // Initialize gradients
             float sumErrorValue = 0, sumError = 0;
 
-            // MSE (loss) and squared error
+            // MSE and squared error
             float meanSquaredError, squaredError = 0;
 
             foreach (float[] sample in data)
@@ -46,9 +46,11 @@ internal class ProgramSimple3
                 float x = sample[0];
                 float y = sample[1];
 
+                // Prediction and error calculation
                 float prediction = a * x + b;
                 float error = y - prediction;
 
+                // Accumulate squared error and gradients
                 squaredError += error * error;
                 sumErrorValue += error * x;
                 sumError += error;
@@ -57,16 +59,16 @@ internal class ProgramSimple3
             // MSE
             meanSquaredError = squaredError / n;
 
-            // Apply the -2/n factor to gradients
+            // Calculate gradients (partial derivatives)
             float deltaA = -2.0f / n * sumErrorValue;
             float deltaB = -2.0f / n * sumError;
 
-            // Update weights (gradient descent)
+            // Update regression parameters
             a -= lr * deltaA;
             b -= lr * deltaB;
 
             if (iteration % printEvery == 0)
-                Console.WriteLine($"Iteration: {iteration,8}, mse: {meanSquaredError,10:F5}, ∂MSE/∂a: {deltaA,10:F4}, ∂MSE/∂b: {deltaB,10:F4}, a: {a,9:F4}, b: {b,9:F4}");
+                Console.WriteLine($"Iteration: {iteration,5}, MSE: {meanSquaredError,10:F5}, ∂MSE/∂a: {deltaA,10:F4}, ∂MSE/∂b: {deltaB,10:F4}, a: {a,9:F4}, b: {b,9:F4}");
         }
 
         // 4. Output learned parameters
