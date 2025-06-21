@@ -9,8 +9,8 @@ internal class ProgramSimple2
         // 1. Prepare training data
 
         // Ground truth coefficients
-        float true_a = -2f;
-        float true_b = 120f;
+        float trueA = -2f;
+        float trueB = 120f;
 
         // Number of training samples
         // const int n = 100;
@@ -48,10 +48,10 @@ internal class ProgramSimple2
         for (int iteration = 0; iteration < interations; iteration++)
         {
             // Initialize gradients
-            float error_times_value_sum = 0, error_sum = 0;
+            float sumErrorValue = 0, sumError = 0;
 
             // MSE (loss) and squared error
-            float mse, error_squared_sum = 0;
+            float meanSquaredError, squaredError = 0;
 
             foreach (float[] sample in data)
             {
@@ -62,33 +62,33 @@ internal class ProgramSimple2
                 float yHat = a * x + b;
                 float error = y - yHat;
 
-                error_squared_sum += error * error;
+                squaredError += error * error;
 
                 // loss += error * error;
 
                 // Gradients (deltas) according to the provided formulas
-                error_times_value_sum += error * x;
-                error_sum += error;
+                sumErrorValue += error * x;
+                sumError += error;
             }
 
-            mse = error_squared_sum / n; // Mean Squared Error
+            meanSquaredError = squaredError / n; // Mean Squared Error
 
             // Apply the -2/n factor to gradients
-            float delta_a = -2.0f / n * error_times_value_sum;
-            float delta_b = -2.0f / n * error_sum;
+            float deltaA = -2.0f / n * sumErrorValue;
+            float deltaB = -2.0f / n * sumError;
 
             // Update weights (gradient descent)
-            a -= lr * delta_a;
-            b -= lr * delta_b;
+            a -= lr * deltaA;
+            b -= lr * deltaB;
 
             //if (iteration % 1000 == 0)
-                Console.WriteLine($"Iteration (epoch) {iteration}, mse (loss): {mse:F5}, a: {a:F4}, b: {b:F4}");
+                Console.WriteLine($"Iteration (epoch) {iteration}, mse (loss): {meanSquaredError:F5}, a: {a:F4}, b: {b:F4}");
         }
 
         // 4. Output learned parameters
 
         Console.WriteLine($"\nLearned parameters: a = {a:F3}, b = {b:F3}");
-        Console.WriteLine($"Expected parameters: a = {true_a}, b = {true_b}");
+        Console.WriteLine($"Expected parameters: a = {trueA}, b = {trueB}");
         Console.ReadLine();
     }
 }
