@@ -11,8 +11,8 @@ internal class ProgramSimple3
         // 1. Set the parameters for the model
 
         const float lr = 0.0005f;
-        const int interations = 4; //  35_000;
-        const int printEvery = 1; //  1_000;
+        const int interations = 35_000; // 4
+        const int printEvery = 1_000; // 1
 
         // 2. Prepare training data
 
@@ -23,9 +23,6 @@ internal class ProgramSimple3
             [40, 40],
             [50, 20],
         ];
-
-        // Number of samples
-        int n = data.Length; 
 
         // 3. Initialize model (weights)
 
@@ -56,6 +53,9 @@ internal class ProgramSimple3
                 sumError += error;
             }
 
+            // Number of samples
+            int n = data.Length;
+
             // MSE
             meanSquaredError = squaredError / n;
 
@@ -73,7 +73,7 @@ internal class ProgramSimple3
 
         // 4. Output learned parameters
 
-        Console.WriteLine($"\nLearned parameters: a = {a:F3}, b = {b:F3}");
+        Console.WriteLine($"\nLearned parameters: a = {a:F4}, b = {b:F4}");
         Console.WriteLine($"Expected parameters: a = -2, b = 120");
         Console.ReadLine();
     }
