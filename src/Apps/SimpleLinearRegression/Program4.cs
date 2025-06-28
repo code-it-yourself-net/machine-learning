@@ -2,7 +2,7 @@
 // File name: ProgramSimple.cs
 // Code It Yourself with .NET, 2024
 
-internal class ProgramSimple3
+internal class Program4
 {
     public static void Main()
     {
@@ -17,11 +17,11 @@ internal class ProgramSimple3
         // 2. Prepare training data
 
         float[][] data = [
-            [10, 100],
-            [20, 80],
-            [30, 60],
-            [40, 40],
-            [50, 20],
+            [1, 2, 3, 4],
+            [2, 3, 4, 5],
+            [3, 4, 5, 6],
+            [4, 5, 6, 7],
+            [5, 6, 7, 8]
         ];
 
         // 3. Initialize model
