@@ -19,6 +19,7 @@ internal class ProgramMatrices
         const int numCoefficients = 3; // Number of independent variables (a1, a2, a3)
 
         // 2. Prepare training data
+        /*
         float[,] X = new float[,] {
             {1, 2, 1}, // Corresponds to x1, x2, x3 for the first sample
             {2, 1, 2}, // Corresponds to x1, x2, x3 for the second sample
@@ -33,10 +34,28 @@ internal class ProgramMatrices
             {19}, // and so on
             {16},
             {17}
-        };
+        };*/
+
+        int n = 50;
+        float[,] X = new float[n, 3];
+        float[,] Y = new float[n, 1];
+
+        // Generate training data
+        Random rand = new();
+        for (int i = 0; i < n; i++)
+        {
+            float x1 = (float)rand.NextDouble() * 10;
+            float x2 = (float)rand.NextDouble() * 10;
+            float x3 = (float)rand.NextDouble() * 10;
+            float y = 2 * x1 + 3 * x2 - 1 * x3 + 5;
+            Y[i, 0] = y;
+            X[i, 0] = x1;
+            X[i, 1] = x2;
+            X[i, 2] = x3;
+        }
 
         // Number of samples
-        int n = X.GetLength(0);
+        // int n = X.GetLength(0);
 
         // 3. Initialize model parameters
         // These are the coefficients for our independent variables and the bias term

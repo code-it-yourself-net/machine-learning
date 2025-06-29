@@ -41,7 +41,7 @@ for (int i = 0; i < numSamples; i++)
 
 int batchSize = xTrain.GetDimension(Dimension.Rows); // 13
 
-(Matrix weights, float bias, float loss) = Train(xTrain, yTrain, iterations: 36_000, learningRate: 0.005f, batchSize: batchSize);
+(Matrix weights, float bias, float loss) = Train(xTrain, yTrain, iterations: 16_000, learningRate: 0.005f, batchSize: batchSize);
 
 Console.WriteLine();
 Console.WriteLine($"weights: \n{weights}, should be: {trueW[0]}, {trueW[1]}");
