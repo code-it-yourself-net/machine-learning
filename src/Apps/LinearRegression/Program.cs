@@ -108,7 +108,7 @@ static (Matrix weightsLossGradient, float biasLossGradient) LossGradients(Matrix
     Matrix dLdPxdPdBias = dLdP.Multiply(dPdBias);
 
     // Calculate the derivate of loss with respect to bias.
-    float dLdBias = dLdPxdPdBias.Sum()  / batchSize;
+    float dLdBias = dLdPxdPdBias.Sum();
 
     return (dLdW, dLdBias);
 }
