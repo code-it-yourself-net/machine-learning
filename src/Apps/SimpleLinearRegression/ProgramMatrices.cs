@@ -1,10 +1,8 @@
 ﻿// Machine Learning Utils
-// File name: Program5.cs
+// File name: ProgramMatrices.cs
 // Code It Yourself with .NET, 2024
 
 using System.Diagnostics;
-
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 internal class ProgramMatrices
 {
@@ -23,16 +21,16 @@ internal class ProgramMatrices
         // 2. Prepare training data
         float[,] X = new float[,] {
             {1, 2, 1}, // Corresponds to x1, x2, x3 for the first sample
-            {2, 1, 2}, // Corresponds to x1, x2, x3 for the second sample, and so on
-            {3, 3, 1},
+            {2, 1, 2}, // Corresponds to x1, x2, x3 for the second sample
+            {3, 3, 1}, // and so on
             {4, 2, 3},
             {1, 4, 2}
         };
 
-        float [,] Y = new float[,] {
+        float[,] Y = new float[,] {
             {12}, // Corresponds to the target value for the first sample
-            {10}, // Corresponds to the target value for the second sample, and so on
-            {19},
+            {10}, // Corresponds to the target value for the second sample
+            {19}, // and so on
             {16},
             {17}
         };
@@ -179,7 +177,7 @@ public static class ArrayExtensions
         return res;
     }
 
-    public static float Mean(this float[,] source) 
+    public static float Mean(this float[,] source)
         => source.Sum() / source.Length;
 
     public static float Sum(this float[,] source)

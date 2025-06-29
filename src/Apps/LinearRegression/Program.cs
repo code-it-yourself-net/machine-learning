@@ -23,38 +23,38 @@ Console.WriteLine("Linear function");
 double[] trueW = { 3.0, -2.0 }; // A and B
 double trueC = 5.0;             // Bias
 Random rand = new Random();
-int numSamples = 100;
+int numSamples = 50;
 Matrix xTrain = new Matrix(numSamples, 2);
 Matrix yTrain = new Matrix(numSamples, 1);
 // Generate training data
 for (int i = 0; i < numSamples; i++)
 {
-    double x = rand.NextDouble() * 10;
-    double y = rand.NextDouble() * 10;
-    double z = trueW[0] * x + trueW[1] * y + trueC;
+    double x1 = rand.NextDouble() * 10;
+    double x2 = rand.NextDouble() * 10;
+    double y = trueW[0] * x1 + trueW[1] * x2 + trueC;
     //xTrain.SetRow(i, new Matrix(new float[,] { { (float)x }, { (float)y } }));
     //yTrain.SetRow(i, new Matrix(new float[,] { { (float)z } }));
-    yTrain.Array[i, 0] = (float)z;
-    xTrain.Array[i, 0] = (float)x;
-    xTrain.Array[i, 1] = (float)y;
+    yTrain.Array[i, 0] = (float)y;
+    xTrain.Array[i, 0] = (float)x1;
+    xTrain.Array[i, 1] = (float)x2;
 }
 
 int batchSize = xTrain.GetDimension(Dimension.Rows); // 13
 
-(Matrix weights, float bias, float loss) = Train(xTrain, yTrain, iterations: 16_000, learningRate: 0.005f, batchSize: batchSize);
+(Matrix weights, float bias, float loss) = Train(xTrain, yTrain, iterations: 36_000, learningRate: 0.005f, batchSize: batchSize);
 
 Console.WriteLine();
-Console.WriteLine($"weights: \n{weights}");
-Console.WriteLine($"bias: {bias}");
+Console.WriteLine($"weights: \n{weights}, should be: {trueW[0]}, {trueW[1]}");
+Console.WriteLine($"bias: {bias}, should be: {trueC}");
 Console.WriteLine($"loss: {loss}");
 Console.WriteLine();
 
-for (int row = 0; row < xTrain.GetDimension(Dimension.Rows); row++)
-{
-    Matrix x = xTrain.GetRow(row);
-    Matrix y = x.MultiplyDot(weights).Add(bias);
-    Console.WriteLine($"x: {x.Array.GetValue(0, 0)}, {x.Array.GetValue(0, 1)} y: {y.Array.GetValue(0, 0)}");
-}
+//for (int row = 0; row < xTrain.GetDimension(Dimension.Rows); row++)
+//{
+//    Matrix x = xTrain.GetRow(row);
+//    Matrix y = x.MultiplyDot(weights).Add(bias);
+//    Console.WriteLine($"x: {x.Array.GetValue(0, 0)}, {x.Array.GetValue(0, 1)} y: {y.Array.GetValue(0, 0)}");
+//}
 
 Console.ReadLine();
 
