@@ -133,7 +133,7 @@ static (Matrix xPermuted, Matrix yPermuted) PermuteData(Matrix x, Matrix y, Rand
     return (xPermuted, yPermuted);
 }
 
-static (Matrix weights, float bias, float loss) Train(Matrix xTrain, Matrix yTrain, int iterations = 200, float learningRate = 0.01f, int? seed = null, int batchSize = 100)
+static (Matrix weights, float bias, float loss) Train(Matrix xTrain, Matrix yTrain, int iterations = 200, float learningRate = 0.005f, int? seed = null, int batchSize = 100)
 {
     float loss = 0;
     Random random;
