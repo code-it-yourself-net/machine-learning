@@ -8,8 +8,6 @@ internal class Program4
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-        // 1. Set the parameters for the model
-
         // The model we are trying to learn is: y = a1*x1 + a2*x2 + a3*x3 + b
 
         // 1. Set the parameters for the model
@@ -31,7 +29,7 @@ internal class Program4
         // 3. Initialize model parameters
         // These are the coefficients for our independent variables and the bias term
         float a1 = 0, a2 = 0, a3 = 0; // Parameters for x1, x2, x3
-        float b = 0;                  // Bias term
+        float b = 0;
 
         // 4. Training loop
         for (int iteration = 0; iteration < iterations; iteration++)
@@ -88,7 +86,7 @@ internal class Program4
 
             if (iteration % printEvery == 0)
             {
-                Console.WriteLine($"Iter: {iteration,6}, MSE: {meanSquaredError,8:F5}, a1: {a1,7:F4}, a2: {a2,7:F4}, a3: {a3,7:F4}, b: {b,7:F4}");
+                Console.WriteLine($"Iteration: {iteration,6}, MSE: {meanSquaredError,8:F5}, a1: {a1,7:F4}, a2: {a2,7:F4}, a3: {a3,7:F4}, b: {b,7:F4}");
             }
         }
 
@@ -98,7 +96,7 @@ internal class Program4
         Console.WriteLine($"  a1: {a1:F4} (coefficient for 1st variable)");
         Console.WriteLine($"  a2: {a2:F4} (coefficient for 2nd variable)");
         Console.WriteLine($"  a3: {a3:F4} (coefficient for 3rd variable)");
-        Console.WriteLine($"  b:  {b:F4} (bias/intercept)");
+        Console.WriteLine($"  b:  {b:F4} (intercept)");
 
         Console.WriteLine($"\nExpected parameters from the formula y = 2*x1 + 3*x2 - 1*x3 + 5:");
         Console.WriteLine($"  a1 =  2.0000, a2 =  3.0000, a3 = -1.0000, b = 5.0000");
