@@ -41,7 +41,7 @@ for (int i = 0; i < numSamples; i++)
 
 int batchSize = xTrain.GetDimension(Dimension.Rows); // 13
 
-(Matrix weights, float bias, float loss) = Train(xTrain, yTrain, iterations: 3_000, learningRate: 0.0005f, batchSize: batchSize);
+(Matrix weights, float bias, float loss) = Train(xTrain, yTrain, iterations: 16_000, learningRate: 0.005f, batchSize: batchSize);
 
 Console.WriteLine();
 Console.WriteLine($"weights: \n{weights}");
@@ -60,7 +60,7 @@ Console.ReadLine();
 
 // Functions
 
-static (Matrix n, Matrix p, float loss) ForwardLinearRegression(Matrix xBatch, Matrix yBatch, Matrix weights, float bias)
+static (Matrix n, Matrix predictions, float loss) ForwardLinearRegression(Matrix xBatch, Matrix yBatch, Matrix weights, float bias)
 {
     Debug.Assert(xBatch.GetDimension(Dimension.Rows) == yBatch.GetDimension(Dimension.Rows));
 
@@ -70,14 +70,14 @@ static (Matrix n, Matrix p, float loss) ForwardLinearRegression(Matrix xBatch, M
     Matrix n = xBatch.MultiplyDot(weights);
 
     // Add the bias to the values to make the predictions.
-    Matrix p = n.Add(bias);
+    Matrix predictions = n.Add(bias);
 
-    Matrix errors = yBatch.Subtract(p);
+    Matrix errors = yBatch.Subtract(predictions);
 
     // Calculate the mean squared error loss.
-    float loss = errors.Power(2).Sum(); // was Mean
+    float loss = errors.Power(2).Mean(); // was Mean
 
-    return (n, p, loss);
+    return (n, predictions, loss);
 }
 
 // bias is not used here, because it's a scalar (so we don't need to know any dimensions) and its derivative is just equal to 1
@@ -89,7 +89,7 @@ static (Matrix weightsLossGradient, float biasLossGradient) LossGradients(Matrix
     // L = loss
 
     // Calculate the derivate of loss with respect to predictions.
-    Matrix dLdP = yBatch.Subtract(p).Multiply(-2f /*/ batchSize*/);
+    Matrix dLdP = yBatch.Subtract(p).Multiply(-2f / batchSize);
 
     // Calculate the derivate of predictions with respect to n.
     Matrix dPdN = Matrix.Ones(n);
@@ -168,7 +168,7 @@ static (Matrix weights, float bias, float loss) Train(Matrix xTrain, Matrix yTra
 
         batchStart += effectiveBatchSize;
 
-        (Matrix n, Matrix p, loss) = ForwardLinearRegression(xBatch, yBatch, weights, bias);
+        (Matrix n, Matrix predictions, loss) = ForwardLinearRegression(xBatch, yBatch, weights, bias);
 
         // Print loss every 100 steps
         if (i % 100 == 0)
@@ -176,7 +176,7 @@ static (Matrix weights, float bias, float loss) Train(Matrix xTrain, Matrix yTra
             Console.WriteLine($"iteration: {i}, loss: {loss}");
         }
 
-        (Matrix weightsLossGradient, float biasLossGradient) = LossGradients(xBatch, yBatch, weights, bias, n, p);
+        (Matrix weightsLossGradient, float biasLossGradient) = LossGradients(xBatch, yBatch, weights, bias, n, predictions);
 
         weights = weights.Subtract(weightsLossGradient.Multiply(learningRate));
 

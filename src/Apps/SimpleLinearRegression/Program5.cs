@@ -37,7 +37,7 @@ internal class Program5
         {
             // Initialize accumulators for errors and gradients for this iteration
             float sumSquaredError = 0;
-            float[] sumErrorForWeights = new float[numCoefficients]; // Accumulator for each coefficient's gradient part
+            float[] sumErrorForA = new float[numCoefficients]; // Accumulator for each coefficient's gradient part
             float sumErrorForB = 0; // Accumulator for the bias's gradient part
 
             foreach (float[] sample in data)
@@ -66,7 +66,7 @@ internal class Program5
                 // For each ai, the gradient part is (error * xi)
                 for (int i = 0; i < numCoefficients; i++)
                 {
-                    sumErrorForWeights[i] += error * x[i];
+                    sumErrorForA[i] += error * x[i];
                 }
                 // For the bias, the gradient part is just the error
                 sumErrorForB += error;
@@ -83,7 +83,7 @@ internal class Program5
             float[] deltaA = new float[numCoefficients];
             for (int i = 0; i < numCoefficients; i++)
             {
-                deltaA[i] = -2.0f / n * sumErrorForWeights[i];
+                deltaA[i] = -2.0f / n * sumErrorForA[i];
             }
 
             // ∂MSE/∂b = -2/n * Σ(error)
@@ -114,7 +114,7 @@ internal class Program5
         Console.WriteLine($"  b (intercept):   {b:F4}");
 
         Console.WriteLine($"\nExpected parameters from the formula y = 2*x1 + 3*x2 - 1*x3 + 5:");
-        Console.WriteLine($"  w1 =  2.0000, w2 =  3.0000, w3 = -1.0000, b = 5.0000");
+        Console.WriteLine($"  a1 =  2.0000, a2 =  3.0000, a3 = -1.0000, b = 5.0000");
         Console.ReadLine();
     }
 }
