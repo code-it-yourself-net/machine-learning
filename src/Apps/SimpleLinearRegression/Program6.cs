@@ -2,7 +2,7 @@
 // File name: Program5.cs
 // Code It Yourself with .NET, 2024
 
-internal class Program5
+internal class Program6
 {
     public static void Main()
     {
@@ -26,9 +26,6 @@ internal class Program5
             [4, 2, 3, 16], // y = 2*4 + 3*2 - 1*3 + 5 = 16
             [1, 4, 2, 17]  // y = 2*1 + 3*4 - 1*2 + 5 = 17
         ];
-
-        // Number of samples
-        int n = data.Length;
 
         // 3. Initialize model parameters
         // These are the coefficients for our independent variables and the bias term
@@ -74,6 +71,9 @@ internal class Program5
                 // For the bias, the gradient part is just the error
                 sumErrorForB += error;
             }
+
+            // Number of samples
+            int n = data.Length;
 
             // MSE (Mean Squared Error)
             float meanSquaredError = sumSquaredError / n;
