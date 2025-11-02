@@ -470,7 +470,7 @@ public static class ArrayExtensions
             }
         }
 
-        return (float)Math.Sqrt(sum / source.Length);
+        return MathF.Sqrt(sum / source.Length);
     }
 
     /// <summary>
@@ -502,7 +502,7 @@ public static class ArrayExtensions
             }
         }
 
-        return (float)Math.Sqrt(sum / source.Length);
+        return MathF.Sqrt(sum / source.Length);
     }
 
     /// <summary>
